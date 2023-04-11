@@ -1,0 +1,465 @@
+<template>
+  <page-header-wrapper
+    title="图书详情"
+    :tab-active-key="tabActiveKey"
+    @tabChange="handleTabChange"
+  >
+    <template v-slot:content>
+      <div class="article-profile-primary ">
+          <div class="cover shadow-cover">
+            <img :src="item.cover" :alt="item.name" itemprop="image" loading="lazy">
+          </div>
+          <div class="article-profile-bd">
+            <h1 itemprop="name" class="article-title">{{item.name}}</h1>
+            <!-- <p itemprop="alternativeHeadline" class="subtitle" v-html="item.desc"></p> -->
+            <div class="article-meta">
+              <meta itemprop="bookFormat" content="http://schema.org/EBook">
+              <link itemprop="author" href="#author">
+                <p class="author">
+                  <span class="label">作者</span>
+                  <span class="labeled-text">
+                    <a v-for="au in item.authorList" :key="au" class="author-item" :href="'/list/search/book?q=' + au"> {{au}}  </a>
+                  </span>
+                </p>
+                <ul class="ant-list-item-action" style="overflow: hidden; zoom: 1; margin-top: 15px;">
+                  <li><icon-text type="star-o" :text="item.interestScore || 0" /></li>
+                  <li><icon-text type="like-o" :text="item.qualityScore || 0" /></li>
+                  <li><icon-text type="message" :text="item.commentsInfo || 0" /></li>
+                </ul>
+                <div style="overflow: hidden; zoom: 1; margin-top: 15px;">
+                  <div class="bookDetailsBox">
+                    <div v-for="(v, k, index) in item.properties" :key="k" class="bookProperty" :style="index % 2 == 0 ? 'width: 40%': '60%'">
+                      <div class="property_label">{{ k }}:</div>
+                      <div class="property_value ">
+                        {{ v }}
+                      </div>
+                    </div>       
+                  </div>
+                </div>
+                <!-- <p class="" v-for="k in item.properties" :key="k">
+                  <span class="label">{{ k }}</span>
+                  <span class="labeled-text">
+                    <span> {{ item.properties[k] }} </span>
+                  </span>
+                </p> -->
+                <p class="desc">
+                  <span class="label"></span>
+                  <span class="labeled-text">
+                    <a-popover placement="top">
+                      <template #content>
+                        <p style="width: 980px; line-height: 25px; background-color:cornsilk;" v-html="item.desc"></p>
+                      </template>
+                      <template #title>
+                        <span>简介：</span>
+                      </template>
+                      <span v-html="item.descText"></span>
+                    </a-popover>
+                  </span>
+                </p>
+              </div>
+            </div>
+        </div>
+    </template>
+
+    <!-- actions -->
+    <template v-slot:extra>
+      <!-- <a-button-group style="margin-right: 4px;">
+        <a-button>点赞</a-button>
+        <a-button><a-icon type="ellipsis"/></a-button>
+      </a-button-group>
+      <a-button type="primary" ></a-button> -->
+    </template>
+
+    <!-- <template v-slot:extraContent>
+      <a-row class="status-list">
+        <a-col :xs="12" :sm="12">
+          <div class="text">状态</div>
+          <div class="heading">待审批</div>
+        </a-col>
+        <a-col :xs="12" :sm="12">
+          <div class="text">订单金额</div>
+          <div class="heading">¥ 568.08</div>
+        </a-col>
+      </a-row>
+    </template> -->
+
+    <a-card style="margin-top: 24px" :bordered="false" title="">
+        <a-button type="primary" ghost size="large" @click="downloadFile(item.id)">
+          <icon-text type="download" text=""/> 下载({{item.fileDesc}})
+        </a-button>
+        <a-button v-if="item.fileDesc && item.fileDesc.indexOf('EPUB') != -1" type="primary" ghost size="large" style="margin-left: 50px;" @click="showDrawer(item.id)">
+          <icon-text type="read" text=""/> 直接阅读
+        </a-button>
+        <a-button v-if="item.fileState == 1 && item.fileDesc && item.fileDesc.indexOf('PDF') != -1" type="primary" ghost size="large" style="margin-left: 50px;" @click="showDrawer(item.id)">
+          <icon-text type="read" text=""/> 直接查看
+        </a-button>
+        <!-- <a-button v-if="item.fileState == 1 && item.fileDesc && (item.fileDesc.indexOf('MOBI') != -1 || item.fileDesc.indexOf('AZW') != -1 || item.fileDesc.indexOf('AZW3') != -1)" type="primary" ghost size="large" style="margin-left: 50px;" @click="showDrawer(item.id)">
+          <icon-text type="read" text=""/> 转换后查看
+        </a-button> -->
+    </a-card>
+
+    <a-drawer width="70%" placement="right" :closable="true" :visible="showFileVisible" height="100%" @close="showFileVisible = false">
+      <h3>{{ item.name }}</h3>
+      <iframe id='previewPdf' v-if="item.fileDesc && 
+        (item.fileDesc.indexOf('EPUB') != -1 
+          || item.fileDesc.indexOf('PDF') != -1 
+          || item.fileDesc.indexOf('MOBI') != -1 
+          || item.fileDesc.indexOf('AZW') != -1 
+          || item.fileDesc.indexOf('AZW3') != -1)" 
+        :src="fileViewUrl" height="100%" width="100%">
+      </iframe>
+    </a-drawer>
+
+    <!-- 推荐 -->
+    <a-card
+      style="margin-top: 24px;"
+      :bordered="false"
+      :tabList="operationTabList"
+      :activeTabKey="operationActiveTabKey"
+      @tabChange="(key) => {this.operationActiveTabKey = key}"
+    > 
+      <!-- <vue-waterfall-easy ref="waterfall" :imgsArr="recommendList" :height="1200" :imgWidth="150" @scrollReachBottom="getRecommendData"></vue-waterfall-easy> -->
+      <vue-masonry-wall :items="recommendList" :options="{width: 180, padding: 12}" @append="getRecommendData">
+        <template v-slot:default="{item}">
+          <div class="cover-item" @click="goDetail(item.url)">
+            <img :src="item.cover"/>
+          </div>
+        </template>
+      </vue-masonry-wall>
+    </a-card>
+    <a-back-top />
+  </page-header-wrapper>
+</template>
+
+<script>
+import { baseMixin } from '@/store/app-mixin'
+import IconText from '../../components/IconText'
+import VueMasonryWall from "vue-masonry-wall"
+
+export default {
+  name: 'Advanced',
+  mixins: [baseMixin],
+  components: {
+    IconText,
+    VueMasonryWall
+  },
+  data () {
+    return {
+      tabActiveKey: 'detail',
+      operationTabList: [
+        {
+          key: '1',
+          tab: '您可能会感兴趣'
+        }
+      ],
+      operationActiveTabKey: '1',
+
+      operationColumns: [
+        {
+          title: '操作类型',
+          dataIndex: 'type',
+          key: 'type'
+        },
+        {
+          title: '操作人',
+          dataIndex: 'name',
+          key: 'name'
+        },
+        {
+          title: '执行结果',
+          dataIndex: 'status',
+          key: 'status',
+          scopedSlots: { customRender: 'status' }
+        },
+        {
+          title: '操作时间',
+          dataIndex: 'updatedAt',
+          key: 'updatedAt'
+        },
+        {
+          title: '备注',
+          dataIndex: 'remark',
+          key: 'remark'
+        }
+      ],
+      operation1: [
+        {
+          key: 'op1',
+          type: '订购关系生效',
+          name: '曲丽丽',
+          status: 'agree',
+          updatedAt: '2017-10-03  19:23:12',
+          remark: '-'
+        },
+        {
+          key: 'op2',
+          type: '财务复审',
+          name: '付小小',
+          status: 'reject',
+          updatedAt: '2017-10-03  19:23:12',
+          remark: '不通过原因'
+        },
+        {
+          key: 'op3',
+          type: '部门初审',
+          name: '周毛毛',
+          status: 'agree',
+          updatedAt: '2017-10-03  19:23:12',
+          remark: '-'
+        },
+        {
+          key: 'op4',
+          type: '提交订单',
+          name: '林东东',
+          status: 'agree',
+          updatedAt: '2017-10-03  19:23:12',
+          remark: '很棒'
+        },
+        {
+          key: 'op5',
+          type: '创建订单',
+          name: '汗牙牙',
+          status: 'agree',
+          updatedAt: '2017-10-03  19:23:12',
+          remark: '-'
+        }
+      ],
+      item: {},
+      recommendList: [],
+      showFileVisible: false,
+      fileUrl: '',
+      fileViewUrl: ''
+    }
+  },
+  filters: {
+    statusFilter (status) {
+      const statusMap = {
+        'agree': '成功',
+        'reject': '驳回'
+      }
+      return statusMap[status]
+    },
+    statusTypeFilter (type) {
+      const statusTypeMap = {
+        'agree': 'success',
+        'reject': 'error'
+      }
+      return statusTypeMap[type]
+    }
+  },
+  created() {
+    const id = (this.$route.params && this.$route.params.id1) + '/' + (this.$route.params && this.$route.params.id2);
+    this.fetchDetail(id)
+    this.getRecommendList(id)
+  },
+  methods: {
+    handleTabChange (key) {
+      console.log('')
+      this.tabActiveKey = key
+    },
+    fetchDetail(id) {
+      this.$http.get('/zlib/' + id).then(res => {
+        console.log('res', res)
+        var d = res.data
+        if(d.properties) {
+          for(var k in d.properties) {
+            if(k.indexOf('出版社') != -1) {
+              d.pub = d.properties[k]
+            } else if(k.indexOf('年') != -1) {
+              d.year = d.properties[k]
+            } else if(k.indexOf('文件') != -1 || k.indexOf('File') != -1) {
+              d.fileDesc = d.properties[k]
+              d.fileExt = d.fileDesc.trim().split(",")[0].trim().toLowerCase()
+            }
+          }
+        }
+        if(!d.authorList && d.author) {
+          d.authorList = [d.author]
+        }
+        d.descText = this.getText(d.desc)
+        this.item = d
+        this.loading = false
+      })
+    },
+    getRecommendList (id) {
+      this.$http.get('/zlib/recommend/' + id).then(res => {
+        console.log('res', res)
+        var data = res.data || []
+        this.recommendList = data
+      })
+    },
+    getRecommendData() {
+      console.log('getRecommendData...')
+    },
+    goDetail (url) {
+      let routeUrl = this.$router.resolve({
+        path: url,
+        query: {t: +new Date()}
+      });
+      window.open(routeUrl.href, '_blank');
+    },
+    downloadFile(id) {
+      window.open('/zlib/download/' + this.item.id + '.' + this.item.fileExt, '_blank')
+    },
+    showDrawer(id) {
+      // var fileUrl = '/zlib/download/' + this.item.id + '.' + this.item.fileExt
+      var fileName = this.item.id.replace('/', '_') + '.' + this.item.fileExt
+      var fileUrl = 'http://ali.361cn.com/d/book/' + this.item.id.substring(0, 2) + '/' + this.item.id.substring(2, 4) + '/' + fileName
+      console.log('fileUrl ==>' + fileUrl)
+      this.showFileVisible = true
+      let path = process.env.VUE_APP_PUBLIC_PATH.endsWith('/') ? process.env.VUE_APP_PUBLIC_PATH: process.env.VUE_APP_PUBLIC_PATH + '/'
+      if(this.item.fileDesc.indexOf('PDF') != -1) {
+        this.fileViewUrl = '/lib/pdfViewer/web/viewer.html?file=' + fileUrl + "?source%3Dview"
+      } else {
+        this.fileViewUrl = path + 'lib/ePubViewer/index.html?' + fileUrl + "?source=view"
+      }
+    },
+    getText(str) {
+      if(!str) {
+        return
+      }
+      let words = str.replace(/<[^<>]+>/g, "").replace(/&nbsp;/gi, " ");
+      return words
+    }
+  }
+}
+</script>
+
+<style lang="less" scoped>
+  .article-profile-primary {
+    /* display: flex; */
+    padding-bottom: 13px;
+  }
+  .bookDetailsBox {
+    zoom: 1;
+    overflow: hidden;
+  }
+  .bookDetailsBox div.bookProperty {
+    float: left;
+    width: 50%;
+    font-size: 10pt;
+    margin-bottom: 10px;
+  }
+  .bookDetailsBox div.bookProperty .property_label {
+    float: left;
+    color: #888;
+    font-size: 10pt;
+    display: block;
+  }
+  .bookDetailsBox div.bookProperty .property_value {
+    display: block;
+    margin-left: 100px;
+  }
+  .article-profile-primary .cover {
+    flex-shrink: 0;
+    min-height: 200px;
+  }
+  .article-profile-primary .cover {
+      margin-right: 25px;
+      width: 180px;
+      height: auto;
+      float: left;
+  }
+  .cover {
+      position: relative;
+      border-radius: 4px;
+      background: url(https://static.arkread.com/ark/pics/app/default-cover.c6741b44.png) center center/100% auto;
+  }
+  .shadow-cover, .mini-shadow-cover, .micro-shadow-cover {
+      box-shadow: 1px 1px 3px 0 rgb(0 0 0 / 20%);
+  }
+  .cover img {
+    width: 100%;
+    height: 100%;
+    border-radius: 4px;
+    opacity: 1;
+    transition: opacity .5s ease-in;
+  }
+  img {
+    max-width: 100%;
+    border: none;
+    vertical-align: middle;
+    -ms-interpolation-mode: bicubic;
+  }
+  .article-profile-primary .article-profile-bd {
+    flex-grow: 1;
+  }
+  .article-title {
+    font-weight: bold;
+    font-size: 20px;
+  }
+  .desc {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-height: 25px;
+    -webkit-box-orient: vertical;
+  }
+  .app-article p {
+    margin-bottom: 0;
+  }
+  p {
+    font-size: 14px;
+    line-height: 1.2;
+  }
+  .detail-layout {
+    margin-left: 44px;
+  }
+  .text {
+    color: rgba(0, 0, 0, .45);
+  }
+
+  .heading {
+    color: rgba(0, 0, 0, .85);
+    font-size: 20px;
+  }
+
+  .no-data {
+    color: rgba(0, 0, 0, .25);
+    text-align: center;
+    line-height: 64px;
+    font-size: 16px;
+
+    i {
+      font-size: 24px;
+      margin-right: 16px;
+      position: relative;
+      top: 3px;
+    }
+  }
+  .cover-item {
+    overflow: hidden;
+    border-radius: 4px;
+    width: 100%;
+    background: #F5F5F5;
+    cursor: pointer;
+  }
+  .cover-item > img {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+    line-height: 0;
+    display: block;
+  }
+  /deep/ .ant-pro-page-header-wrap-children-content {
+    margin: 24px 0px 0;
+  }
+  /deep/ .ant-pro-grid-content.wide {
+    max-width: 100%;
+  }
+  /deep/ .ant-drawer-body {
+    height: 98% !important;
+  }
+
+  .mobile {
+    .detail-layout {
+      margin-left: unset;
+    }
+    .text {
+
+    }
+    .status-list {
+      text-align: left;
+    }
+  }
+</style>
