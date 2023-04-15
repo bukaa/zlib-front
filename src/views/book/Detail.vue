@@ -85,7 +85,7 @@
       </a-row>
     </template> -->
 
-    <a-card style="margin-top: 24px" :bordered="false" title="">
+    <a-card v-if="item.fileState == 1" style="margin-top: 24px" :bordered="false" title="">
         <a-button type="primary" ghost size="large" @click="downloadFile(item.id)">
           <icon-text type="download" text=""/> 下载({{item.fileDesc}})
         </a-button>
@@ -263,7 +263,11 @@ export default {
       window.open(routeUrl.href, '_blank');
     },
     downloadFile(id) {
-      window.open('/zlib/download/' + this.item.id + '.' + this.item.fileExt, '_blank')
+      var fileName = this.item.id.replace('/', '_') + '.' + this.item.fileExt
+      var fileUrl = 'http://ali.361cn.com/d/book/' + this.item.id.substring(0, 2) + '/' + this.item.id.substring(2, 4) + '/' + fileName
+      console.log('fileUrl ==>' + fileUrl)
+      window.open(fileUrl, '_blank')
+      // window.open('/zlib/download/' + this.item.id + '.' + this.item.fileExt, '_blank')
     },
     showDrawer(id) {
       // var fileUrl = '/zlib/download/' + this.item.id + '.' + this.item.fileExt
