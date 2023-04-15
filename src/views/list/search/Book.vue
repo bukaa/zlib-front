@@ -308,7 +308,7 @@ export default {
   }
   .shadow-cover, .mini-shadow-cover, .micro-shadow-cover {
       box-shadow: 1px 1px 3px 0 rgb(0 0 0 / 20%);
-      min-height: 145px;
+      min-height: 136px;
   }
   .cover img {
     width: 100%;
