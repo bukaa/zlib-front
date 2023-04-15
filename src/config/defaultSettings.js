@@ -14,6 +14,7 @@
 
 export default {
   theme: "light",
+  navTheme: 'light',
   primaryColor: '#2791D1', // '#F5222D', // primary color of ant design
   layout: 'topmenu', // nav menu position: `sidemenu` or `topmenu`
   contentWidth: 'Fixed', // layout of content: `Fluid` or `Fixed`, only works when layout is topmenu

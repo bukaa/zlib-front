@@ -63,11 +63,13 @@
 
     <!-- actions -->
     <template v-slot:extra>
-      <!-- <a-button-group style="margin-right: 4px;">
-        <a-button>点赞</a-button>
-        <a-button><a-icon type="ellipsis"/></a-button>
+      <a-button-group style="margin-right: 4px;">
+        <a-button v-if="readState == -1" @click="addRead"><a-icon type="plus-circle"/>加入阅读</a-button>
+        <a-button v-if="readState == 0"><a-icon type="clock-circle"/>已加入阅读</a-button>
+        <a-button v-if="readState == 1"><a-icon type="clock-circle"/>阅读中</a-button>
+        <a-button v-if="readState == 2"><a-icon type="check-circle"/>已读完</a-button>
+        <a-button style="margin-left: 5px;" v-if="readState == 0 || readState == 1 || readState == 2" @click="delRead()"><a-icon type="close-circle"/>删除</a-button>
       </a-button-group>
-      <a-button type="primary" ></a-button> -->
     </template>
 
     <!-- <template v-slot:extraContent>
@@ -119,7 +121,7 @@
       @tabChange="(key) => {this.operationActiveTabKey = key}"
     > 
       <!-- <vue-waterfall-easy ref="waterfall" :imgsArr="recommendList" :height="1200" :imgWidth="150" @scrollReachBottom="getRecommendData"></vue-waterfall-easy> -->
-      <vue-masonry-wall :items="recommendList" :options="{width: 180, padding: 12}" @append="getRecommendData">
+      <vue-masonry-wall :items="recommendList" :options="{width: 180, padding: 12}" :ssr="{columns: 2}" @append="getRecommendData">
         <template v-slot:default="{item}">
           <div class="cover-item" @click="goDetail(item.url)">
             <img :src="item.cover"/>
@@ -127,13 +129,18 @@
         </template>
       </vue-masonry-wall>
     </a-card>
+    <!-- <a-card>
+      <icon-selector></icon-selector>
+    </a-card> -->
     <a-back-top />
   </page-header-wrapper>
 </template>
 
 <script>
 import { baseMixin } from '@/store/app-mixin'
+import { getReadState, addRead, doRead, delRead } from '@/api/read'
 import IconText from '../../components/IconText'
+import IconSelector from '../../components/IconSelector'
 import VueMasonryWall from "vue-masonry-wall"
 
 export default {
@@ -141,10 +148,12 @@ export default {
   mixins: [baseMixin],
   components: {
     IconText,
+    IconSelector,
     VueMasonryWall
   },
   data () {
     return {
+      id: '',
       tabActiveKey: 'detail',
       operationTabList: [
         {
@@ -153,77 +162,7 @@ export default {
         }
       ],
       operationActiveTabKey: '1',
-
-      operationColumns: [
-        {
-          title: '操作类型',
-          dataIndex: 'type',
-          key: 'type'
-        },
-        {
-          title: '操作人',
-          dataIndex: 'name',
-          key: 'name'
-        },
-        {
-          title: '执行结果',
-          dataIndex: 'status',
-          key: 'status',
-          scopedSlots: { customRender: 'status' }
-        },
-        {
-          title: '操作时间',
-          dataIndex: 'updatedAt',
-          key: 'updatedAt'
-        },
-        {
-          title: '备注',
-          dataIndex: 'remark',
-          key: 'remark'
-        }
-      ],
-      operation1: [
-        {
-          key: 'op1',
-          type: '订购关系生效',
-          name: '曲丽丽',
-          status: 'agree',
-          updatedAt: '2017-10-03  19:23:12',
-          remark: '-'
-        },
-        {
-          key: 'op2',
-          type: '财务复审',
-          name: '付小小',
-          status: 'reject',
-          updatedAt: '2017-10-03  19:23:12',
-          remark: '不通过原因'
-        },
-        {
-          key: 'op3',
-          type: '部门初审',
-          name: '周毛毛',
-          status: 'agree',
-          updatedAt: '2017-10-03  19:23:12',
-          remark: '-'
-        },
-        {
-          key: 'op4',
-          type: '提交订单',
-          name: '林东东',
-          status: 'agree',
-          updatedAt: '2017-10-03  19:23:12',
-          remark: '很棒'
-        },
-        {
-          key: 'op5',
-          type: '创建订单',
-          name: '汗牙牙',
-          status: 'agree',
-          updatedAt: '2017-10-03  19:23:12',
-          remark: '-'
-        }
-      ],
+      readState: -2,
       item: {},
       recommendList: [],
       showFileVisible: false,
@@ -250,7 +189,9 @@ export default {
   created() {
     const id = (this.$route.params && this.$route.params.id1) + '/' + (this.$route.params && this.$route.params.id2);
     this.fetchDetail(id)
+    this.getReadState(id)
     this.getRecommendList(id)
+    this.id = id
   },
   methods: {
     handleTabChange (key) {
@@ -279,6 +220,29 @@ export default {
         d.descText = this.getText(d.desc)
         this.item = d
         this.loading = false
+      })
+    },
+    getReadState(id) {
+      getReadState(id).then(res => {
+        this.readState = res.data
+      })
+    },
+    addRead() {
+      addRead(this.id, {}).then(res => {
+        this.readState = 0
+      })
+    },
+    doRead() {
+      doRead(this.id, {}).then(res => {
+        if(!res || !res.data || res.data == -1) {
+          return
+        }
+        this.readState = 1
+      })
+    },
+    delRead() {
+      delRead(this.id, {}).then(res => {
+        this.readState = -1
       })
     },
     getRecommendList (id) {
@@ -313,6 +277,7 @@ export default {
       } else {
         this.fileViewUrl = path + 'lib/ePubViewer/index.html?' + fileUrl + "?source=view"
       }
+      this.doRead()
     },
     getText(str) {
       if(!str) {

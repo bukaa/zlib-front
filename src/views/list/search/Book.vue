@@ -64,7 +64,7 @@
       @tabChange="(key) => {this.operationActiveTabKey = key}"
     > 
       <!-- <vue-waterfall-easy ref="waterfall" :imgsArr="recommendList" :height="1200" :imgWidth="150" @scrollReachBottom="getRecommendData"></vue-waterfall-easy> -->
-      <vue-masonry-wall :items="recommendList" :options="{width: 225, padding: 12}" @append="getRecommendData">
+      <vue-masonry-wall :items="recommendList" :options="{width: 225, padding: 12}" :ssr="{columns: 2}" @append="getRecommendData">
         <template v-slot:default="{item}">
           <div class="cover-item" @click="goDetail(item.id)">
             <img :src="item.cover"/>

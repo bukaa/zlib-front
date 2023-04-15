@@ -14,13 +14,13 @@
             <p>
               <i class="title"></i>交互专家
             </p>
-            <p>
+            <!-- <p>
               <i class="group"></i>蚂蚁金服－某某某事业群－某某平台部－某某技术部－UED
-            </p>
+            </p> -->
             <p>
               <i class="address"></i>
-              <span>浙江省</span>
-              <span>杭州市</span>
+              <span>湖北省</span>
+              <span>武汉市</span>
             </p>
           </div>
           <a-divider/>
@@ -111,7 +111,7 @@ export default {
   },
   data () {
     return {
-      tags: ['很有想法的', '专注设计', '辣~', '大长腿', '川妹子', '海纳百川'],
+      tags: ['很有想法的', '专注设计', '大长腿', '川妹子', '海纳百川'],
 
       tagInputVisible: false,
       tagInputValue: '',
