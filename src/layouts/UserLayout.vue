@@ -9,8 +9,8 @@
         <div class="top">
           <div class="header">
             <a href="/">
-              <img src="~@/assets/logo.svg" class="logo" alt="logo">
-              <span class="title">Ant Design</span>
+              <img src="~@/assets/bookdb_logo_2.png" class="logo" alt="logo">
+              <!-- <span class="title">bookdb.net</span> -->
             </a>
           </div>
           <div class="desc">
@@ -114,7 +114,7 @@ export default {
           }
 
           .logo {
-            height: 44px;
+            height: 62px;
             vertical-align: top;
             margin-right: 16px;
             border-style: none;
@@ -132,7 +132,7 @@ export default {
         .desc {
           font-size: 14px;
           color: rgba(0, 0, 0, 0.45);
-          margin-top: 12px;
+          margin-top: 25px;
           margin-bottom: 40px;
         }
       }

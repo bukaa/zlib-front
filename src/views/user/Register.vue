@@ -44,14 +44,14 @@
         ></a-input-password>
       </a-form-item>
 
-      <a-form-item>
+      <!-- <a-form-item>
         <a-input size="large" :placeholder="$t('user.login.mobile.placeholder')" v-decorator="['mobile', {rules: [{ required: true, message: $t('user.phone-number.required'), pattern: /^1[3456789]\d{9}$/ }, { validator: this.handlePhoneCheck } ], validateTrigger: ['change', 'blur'] }]">
           <a-select slot="addonBefore" size="large" defaultValue="+86">
             <a-select-option value="+86">+86</a-select-option>
             <a-select-option value="+87">+87</a-select-option>
           </a-select>
         </a-input>
-      </a-form-item>
+      </a-form-item> -->
       <!--<a-input-group size="large" compact>
             <a-select style="width: 20%" size="large" defaultValue="+86">
               <a-select-option value="+86">+86</a-select-option>
@@ -60,7 +60,7 @@
             <a-input style="width: 80%" size="large" placeholder="11 位手机号"></a-input>
           </a-input-group>-->
 
-      <a-row :gutter="16">
+      <!-- <a-row :gutter="16">
         <a-col class="gutter-row" :span="16">
           <a-form-item>
             <a-input size="large" type="text" :placeholder="$t('user.login.mobile.verification-code.placeholder')" v-decorator="['captcha', {rules: [{ required: true, message: '请输入验证码' }], validateTrigger: 'blur'}]">
@@ -76,7 +76,7 @@
             @click.stop.prevent="getCaptcha"
             v-text="!state.smsSendBtn && $t('user.register.get-verification-code')||(state.time+' s')"></a-button>
         </a-col>
-      </a-row>
+      </a-row> -->
 
       <a-form-item>
         <a-button
@@ -96,7 +96,8 @@
 </template>
 
 <script>
-import { getSmsCaptcha } from '@/api/login'
+import notification from 'ant-design-vue/es/notification'
+import { getSmsCaptcha, register } from '@/api/login'
 import { deviceMixin } from '@/store/device-mixin'
 import { scorePassword } from '@/utils/util'
 
@@ -188,13 +189,13 @@ export default {
       callback()
     },
 
-    handlePhoneCheck (rule, value, callback) {
-      console.log('handlePhoneCheck, rule:', rule)
-      console.log('handlePhoneCheck, value', value)
-      console.log('handlePhoneCheck, callback', callback)
+    // handlePhoneCheck (rule, value, callback) {
+    //   console.log('handlePhoneCheck, rule:', rule)
+    //   console.log('handlePhoneCheck, value', value)
+    //   console.log('handlePhoneCheck, callback', callback)
 
-      callback()
-    },
+    //   callback()
+    // },
 
     handlePasswordInputClick () {
       if (!this.isMobile) {
@@ -205,11 +206,27 @@ export default {
     },
 
     handleSubmit () {
+      debugger
       const { form: { validateFields }, state, $router } = this
       validateFields({ force: true }, (err, values) => {
         if (!err) {
           state.passwordLevelChecked = false
-          $router.push({ name: 'registerResult', params: { ...values } })
+          values.name = values.email
+          register(values).then(res => {
+            if(res.status == 'ok') {
+              $router.push({ name: 'registerResult', params: { ...values } })
+            } else {
+              notification.error({
+                message: '错误',
+                description: res.msg || '用户注册失败提交失败，请重试'
+              })
+            }
+          }).catch(err=> {
+            notification.error({
+              message: '错误',
+              description: '注册失败，请重试'
+            })
+          })
         }
       })
     },

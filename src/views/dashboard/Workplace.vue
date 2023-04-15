@@ -39,7 +39,7 @@
             :body-style="{ padding: 0 }"
           >
             <a slot="extra">全部项目</a>
-            <div>
+            <a-list>
               <a-card-grid class="project-card-grid" :key="i" v-for="(item, i) in projects">
                 <a-card :bordered="false" :body-style="{ padding: 0 }" @click="goDetail(item.id)">
                   <div class="article-profile-primary ">
@@ -81,7 +81,7 @@
                   </div>
                 </a-card>
               </a-card-grid>
-            </div>
+            </a-list>
           </a-card>
 
           <a-card :loading="loading" title="动态" :bordered="false">
@@ -208,7 +208,9 @@ export default {
         { item: '引用', a: 70, b: 50, c: 40 }
       ],
       radarData: [],
-      countData: {}
+      countData: {
+        target: 50
+      }
     }
   },
   computed: {

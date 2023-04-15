@@ -1,8 +1,8 @@
 <template>
   <div>
-    <div style="width: 100%;text-align: center;">
+    <!-- <div style="width: 100%;text-align: center;">
       <img v-if="showRecommend" src="@/assets/bookdb_logo_2.png" style="width: 250px;height: auto;margin-bottom: 5%;margin-top: 18%;border-radius: 5px;">
-    </div>
+    </div> -->
     <a-card :bordered="false" class="ant-pro-components-tag-select">
       <a-form :form="form" layout="inline">
         <!-- <standard-form-row title="类目" block style="padding-bottom: 11px;">

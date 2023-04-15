@@ -4,7 +4,7 @@ const userApi = {
   Login: '/login',
   Logout: '/logout',
   ForgePassword: '/auth/forge-password',
-  Register: '/auth/register',
+  Register: '/register',
   twoStepCode: '/auth/2step-code',
   SendSms: '/account/sms',
   SendSmsErr: '/account/sms_err',
@@ -64,6 +64,14 @@ export function logout () {
     headers: {
       'Content-Type': 'application/json;charset=UTF-8'
     }
+  })
+}
+
+export function register(data) {
+  return request({
+    url: userApi.Register,
+    method: 'post',
+    data
   })
 }
 
