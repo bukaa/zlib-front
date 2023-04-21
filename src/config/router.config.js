@@ -76,13 +76,13 @@ export const asyncRouterMap = [
         path: '/list',
         name: 'list',
         component: RouteView,
-        redirect: '/list/book-list',
+        redirect: '/list/search-list',
         meta: { title: 'menu.list.search-list.books', icon: 'table', permission: ['table'] },
         hideChildrenInMenu: true,
         children: [
           {
-            path: '/list/book-list',
-            name: 'BookList',
+            path: '/list/search-list',
+            name: 'BookSearch',
             hideChildrenInMenu: true, // 强制显示 MenuItem 而不是 SubMenu
             component: () => import('@/views/list/search/Book'),
             meta: { title: 'menu.list.search-list.books', keepAlive: true, permission: ['table'] }
@@ -92,6 +92,29 @@ export const asyncRouterMap = [
             name: 'BookDetail',
             component: () => import('@/views/book/Detail'),
             meta: { title: 'menu.book.detail', keepAlive: false, hidden: true }
+          }
+        ]
+      },
+      {
+        path: '/book-list',
+        name: 'book-list',
+        component: RouteView,
+        redirect: '/list/book-list',
+        meta: { title: 'menu.list.book-list', icon: 'table', permission: ['table'] },
+        hideChildrenInMenu: true,
+        children: [
+          {
+            path: '/list/book-list',
+            name: 'BookList',
+            hideChildrenInMenu: true, // 强制显示 MenuItem 而不是 SubMenu
+            component: () => import('@/views/list/search/BookList'),
+            meta: { title: 'menu.list.book-list', keepAlive: true, permission: ['table'] }
+          },
+          {
+            path: '/booklist/:id1/:id2',
+            name: 'BookListDetail',
+            component: () => import('@/views/book/BookListDetail'),
+            meta: { title: 'menu.book-list.detail', keepAlive: false, hidden: true }
           }
         ]
       },

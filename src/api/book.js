@@ -1,60 +1,37 @@
 import request from '@/utils/request'
 
-const userApi = {
+const bookApi = {
   Logout: '/auth/logout',
   ForgePassword: '/auth/forge-password',
   Register: '/auth/register',
   twoStepCode: '/auth/2step-code',
   SendSms: '/account/sms',
   SendSmsErr: '/account/sms_err',
-  // get my info
-  UserInfo: '/user/info',
-  UserMenu: '/user/nav'
+
+  BookList: '/zlib/bookList',
+  BookListDetail: '/zlib/bookList/',
+  BookListItems: '/zlib/bookList/items'
 }
 
-export function getSmsCaptcha (parameter) {
+export function getBookList (parameter) {
   return request({
-    url: userApi.SendSms,
-    method: 'post',
-    data: parameter
-  })
-}
-
-export function getInfo () {
-  return request({
-    url: userApi.UserInfo,
+    url: bookApi.BookList,
     method: 'get',
-    headers: {
-      'Content-Type': 'application/json;charset=UTF-8'
-    }
+    params: parameter
   })
 }
 
-export function getCurrentUserNav () {
+export function getBookListDetail (id) {
   return request({
-    url: userApi.UserMenu,
+    url: bookApi.BookListDetail + id,
     method: 'get'
   })
 }
 
-export function logout () {
+export function getBookListItems (parameter) {
   return request({
-    url: userApi.Logout,
-    method: 'post',
-    headers: {
-      'Content-Type': 'application/json;charset=UTF-8'
-    }
-  })
-}
-
-/**
- * get user 2step code open?
- * @param parameter {*}
- */
-export function get2step (parameter) {
-  return request({
-    url: userApi.twoStepCode,
-    method: 'post',
-    data: parameter
+    url: bookApi.BookListItems,
+    method: 'get',
+    params: parameter
   })
 }

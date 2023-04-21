@@ -17,6 +17,7 @@ export default {
     'menu.list.basic-list': 'Basic List',
     'menu.list.card-list': 'Card List',
     'menu.list.search-list': 'Search List',
+    'menu.list.book-list': 'Hot BookList',
     'menu.list.search-list.books': 'Search Books',
     'menu.list.search-list.projects': 'Search List(projects)',
     'menu.list.search-list.applications': 'Search List(applications)',
@@ -36,5 +37,6 @@ export default {
     'menu.account.settings': 'Account Settings',
     'menu.account.trigger': 'Trigger Error',
     'menu.account.logout': 'Logout',
-    'menu.book.detail': 'Book'
+    'menu.book.detail': 'Book',
+    'menu.book-list.detail': 'BookList'
 }

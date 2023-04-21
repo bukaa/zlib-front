@@ -36,5 +36,6 @@ export default {
     'menu.account.settings': '个人设置',
     'menu.account.trigger': '触发报错',
     'menu.account.logout': '退出登录',
-    'menu.book.detail': '图书详情'
+    'menu.book.detail': '图书详情',
+    'menu.book-list.detail': '书单详情'
 }
