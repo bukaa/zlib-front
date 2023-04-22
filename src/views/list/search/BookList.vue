@@ -252,6 +252,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
+@import '~ant-design-vue/lib/style/index';
 .project-list {
   .article-profile-primary {
     /* display: flex; */
@@ -394,7 +395,7 @@ export default {
 }
 
 .readlist-item {
-    --editor_choice-outline_color: #8ECD51;
+    --editor_choice-outline_color: @primary-color;
 }
 
 .readlist-item.hovered:not(.readlist_item--editors-choice) {
@@ -405,7 +406,7 @@ export default {
 
 .readlist_item--editors-choice {
     box-shadow: 4px 6px 8px #eee,
-        inset 0 0 0 2px var(--editor_choice-outline_color, greenyellow) !important;
+        inset 0 0 0 2px var(--editor_choice-outline_color, @primary-color) !important;
 }
 
 .readlist_item--editors-choice__label {
@@ -418,7 +419,7 @@ export default {
     font-weight: 500;
     font-size: 85%;
     line-height: 18px;
-    background-color: var(--editor_choice-outline_color, greenyellow);
+    background-color: var(--editor_choice-outline_color, @primary-color);
     padding: 0 6px;
     user-select: none;
 }
