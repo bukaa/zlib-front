@@ -100,7 +100,7 @@
         </a-button> -->
     </a-card>
 
-    <a-drawer width="70%" placement="right" :closable="true" :visible="showFileVisible" height="100%" @close="showFileVisible = false">
+    <a-drawer :width="deviceType === 'Pad' || deviceType === 'Mobile' ? '100%': '70%'" placement="right" :closable="true" :visible="showFileVisible" height="100%" @close="showFileVisible = false">
       <h3>{{ item.name }}</h3>
       <iframe id='previewPdf' v-if="item.fileDesc && 
         (item.fileDesc.indexOf('EPUB') != -1 
@@ -167,7 +167,8 @@ export default {
       recommendList: [],
       showFileVisible: false,
       fileUrl: '',
-      fileViewUrl: ''
+      fileViewUrl: '',
+      deviceType: ''
     }
   },
   filters: {
@@ -220,6 +221,7 @@ export default {
         d.descText = this.getText(d.desc)
         this.item = d
         this.loading = false
+        this.getPlatform()
       })
     },
     getReadState(id) {
@@ -289,6 +291,21 @@ export default {
       }
       let words = str.replace(/<[^<>]+>/g, "").replace(/&nbsp;/gi, " ");
       return words
+    },
+    getPlatform() {
+      this.deviceType = ''
+      const setDeviceType = () => {
+        const width = document.documentElement.clientWidth
+        if (width > 1200) {
+          this.deviceType = 'PC'
+        } else if (width > 800) {
+          this.deviceType = 'Pad'
+        } else {
+          this.deviceType = 'Mobile'
+        }
+      }
+      window.addEventListener('resize', setDeviceType)
+      setDeviceType()
     }
   }
 }

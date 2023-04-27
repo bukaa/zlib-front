@@ -15,10 +15,27 @@
 
         <standard-form-row title="" grid>
           <a-row>
-            <a-col :md="24">
+            <a-col :md="20">
               <a-form-item :wrapper-col="{ span: 24 }">
-                <a-input-search v-model="query.keywords" placeholder="输入收藏图书名称~" enter-button="Search" allowClear
+                <a-input-search v-model="query.keywords" placeholder="输入图书名称~" enter-button="Search" allowClear
                   size="large" @search="onSearch" />
+              </a-form-item>
+            </a-col>
+            <a-col :md="4">
+              <a-form-item>
+                <a-select
+                  ref="select"
+                  v-model="query.order"
+                  size="large"
+                  allowClear
+                  style="width: 140px; margin-left: 20px;"
+                  @change="onSearch"
+                >
+                  <a-select-option value="popular">最受欢迎</a-select-option>
+                  <a-select-option value="timeAsc">时间增序</a-select-option>
+                  <a-select-option value="timeDesc">时间倒序</a-select-option>
+                  <a-select-option value="random">随机排列</a-select-option>
+                </a-select>
               </a-form-item>
             </a-col>
           </a-row>
@@ -160,7 +177,7 @@ export default {
   },
   data() {
     return {
-      query: { pn: 1, keywords: '', year: '', language: '' },
+      query: { pn: 1, keywords: '', order: 'timeAsc', language: '' },
       loading: true,
       loadingMore: false,
       loadMoreBtn: true,
@@ -573,7 +590,6 @@ export default {
 }
 
 .readlist-info .author {
-    width: 90px;
     margin-right: 36px;
 }
 

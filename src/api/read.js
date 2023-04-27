@@ -8,6 +8,9 @@ const readApi = {
   DelRead: '/user/read/record/del/',
   Count: '/user/read/record/count',
 
+  ReadHistory: '/user/read/history/findLast',
+  ReadRecord: '/user/read/record/bookshelf',
+
   Register: '/auth/register',
   twoStepCode: '/auth/2step-code',
   SendSms: '/account/sms',
@@ -58,6 +61,22 @@ export function doRead(bookId, data) {
     url: readApi.DoRead + bookId,
     method: 'post',
     data
+  })
+}
+
+export function findReadHistory(parameter) {
+  return request({
+    url: readApi.ReadHistory,
+    method: 'get',
+    params: parameter
+  })
+}
+
+export function findReadRecord(parameter) {
+  return request({
+    url: readApi.ReadRecord,
+    method: 'get',
+    params: parameter
   })
 }
 

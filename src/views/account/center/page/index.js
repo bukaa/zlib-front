@@ -1,5 +1,5 @@
 import AppPage from './App'
-import ArticlePage from './Article'
-import ProjectPage from './Project'
+import ReadRecord from './ReadRecord'
+import ReadHistory from './ReadHistory'
 
-export { AppPage, ArticlePage, ProjectPage }
+export { AppPage, ReadRecord, ReadHistory }

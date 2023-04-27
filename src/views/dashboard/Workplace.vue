@@ -38,7 +38,7 @@
             title="进行中的项目"
             :body-style="{ padding: 0 }"
           >
-            <a slot="extra">全部项目</a>
+            <a slot="extra" @click="goCenter">全部项目</a>
             <a-list>
               <a-card-grid class="project-card-grid" :key="i" v-for="(item, i) in projects">
                 <a-card :bordered="false" :body-style="{ padding: 0 }" @click="goDetail(item.id)">
@@ -265,6 +265,11 @@ export default {
         query: {
           t: +new Date()
         }
+      })
+    },
+    goCenter() {
+      this.$router.push({
+        path: '/account/center'
       })
     },
     getActivity () {

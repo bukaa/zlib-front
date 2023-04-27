@@ -1,7 +1,7 @@
 export default {
     'menu.welcome': '欢迎',
     'menu.home': '主页',
-    'menu.dashboard': '仪表盘',
+    'menu.dashboard': '主页',
     'menu.dashboard.analysis': '分析页',
     'menu.dashboard.monitor': '监控页',
     'menu.dashboard.workplace': '工作台',
@@ -17,7 +17,8 @@ export default {
     'menu.list.basic-list': '标准列表',
     'menu.list.card-list': '卡片列表',
     'menu.list.search-list': '搜索列表',
-    'menu.list.search-list.books': '搜索列表（文章）',
+    'menu.list.book-list': '热门书单',
+    'menu.list.search-list.books': '搜索图书',
     'menu.list.search-list.projects': '搜索列表（项目）',
     'menu.list.search-list.applications': '搜索列表（应用）',
     'menu.profile': '详情页',
