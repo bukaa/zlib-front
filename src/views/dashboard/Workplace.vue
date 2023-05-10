@@ -58,12 +58,12 @@
                               <a v-for="au in item.authorList" :key="au" class="author-item" :href="'/search?q=' + item.au"> {{au}}  </a>
                             </span>
                           </p>
-                          <p class="category">
+                          <!-- <p class="category">
                             <span class="label"></span>
                             <span class="labeled-text">
-                              <span itemprop="genre"> {{ item.properties && item.properties.种类 }} </span>
+                              <span class="ellipsis" itemprop="genre"> {{ item.properties && item.properties.种类 }} </span>
                             </span>
-                          </p>
+                          </p> -->
                           <p class="">
                             <span class="label"></span>
                             <span class="labeled-text">
@@ -110,15 +110,13 @@
           :sm="24"
           :xs="24">
           <a-card
-            title="XX 指数"
+            title="天气 指数"
             style="margin-bottom: 24px"
-            :loading="radarLoading"
             :bordered="false"
             :body-style="{ padding: 0 }"
           >
-            <div style="min-height: 400px;">
-              <!-- :scale="scale" :axis1Opts="axis1Opts" :axis2Opts="axis2Opts"  -->
-              <radar :data="radarData" />
+            <div style="text-align: center;margin-top: 10px;">
+              <iframe allowtransparency="true" frameborder="0" width="290" height="96" scrolling="no" src="//tianqi.2345.com/plugin/widget/index.htm?s=1&z=1&t=0&v=0&d=2&bd=0&k=&f=&ltf=009944&htf=cc0000&q=1&e=1&a=1&c=54511&w=290&h=96&align=center"></iframe>
             </div>
           </a-card>
           <a-card :loading="loading" title="团队" :bordered="false">
@@ -432,6 +430,12 @@ export default {
     margin-bottom: 13px;
     width: 25%;
   }
+}
+
+.ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .members {

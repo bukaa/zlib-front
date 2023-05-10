@@ -191,7 +191,6 @@ export default {
     const id = (this.$route.params && this.$route.params.id1) + '/' + (this.$route.params && this.$route.params.id2);
     this.fetchDetail(id)
     this.getReadState(id)
-    this.getRecommendList(id)
     this.id = id
   },
   methods: {
@@ -203,6 +202,12 @@ export default {
       this.$http.get('/zlib/' + id).then(res => {
         console.log('res', res)
         var d = res.data
+        if(!d || d.deleted) {
+          this.$router.push({
+            path: '/exception/404'
+          })
+          return
+        }
         if(d.properties) {
           for(var k in d.properties) {
             if(k.indexOf('出版社') != -1) {
@@ -221,6 +226,7 @@ export default {
         d.descText = this.getText(d.desc)
         this.item = d
         this.loading = false
+        this.getRecommendList(id)
         this.getPlatform()
       })
     },
@@ -274,10 +280,28 @@ export default {
     showDrawer(id) {
       // var fileUrl = '/zlib/download/' + this.item.id + '.' + this.item.fileExt
       var fileName = this.item.id.replace('/', '_') + '.' + this.item.fileExt
-      var fileUrl = 'http://ali.361cn.com/d/book/' + this.item.id.substring(0, 2) + '/' + this.item.id.substring(2, 4) + '/' + fileName
-      console.log('fileUrl ==>' + fileUrl)
-      this.showFileVisible = true
       let path = process.env.VUE_APP_PUBLIC_PATH.endsWith('/') ? process.env.VUE_APP_PUBLIC_PATH: process.env.VUE_APP_PUBLIC_PATH + '/'
+      // this.$http.get('http://ali.361cn.com/d/book123/' + this.item.id.substring(0, 2) + '/' + this.item.id.substring(2, 4) + '/' + fileName).then(res => {
+      //   console.log('res', res)
+      //   var data = res.data
+      //   if(!data.redirect_url) {
+      //     this.$notification['error']({
+      //       message: '提示',
+      //       description: '文件获取失败，请联系管理员',
+      //       duration: 8
+      //     })
+      //   }
+      //   var fileUrl = data.redirect_url.replace('auto_redirect=0', 'auto_redirect=1')
+      //   fileUrl = encodeURIComponent(fileUrl)
+      //   this.showFileVisible = true
+      //   if(this.item.fileDesc.indexOf('PDF') != -1) {
+      //     this.fileViewUrl = '/lib/pdfViewer/web/viewer.html?file=' + fileUrl + "&source%3Dview"
+      //   } else {
+      //     this.fileViewUrl = path + 'lib/ePubViewer/index.html?' + fileUrl + "&source=view"
+      //   }
+      // })
+      var fileUrl = 'http://ali.361cn.com/d/book/' + this.item.id.substring(0, 2) + '/' + this.item.id.substring(2, 4) + '/' + fileName
+      this.showFileVisible = true
       if(this.item.fileDesc.indexOf('PDF') != -1) {
         this.fileViewUrl = '/lib/pdfViewer/web/viewer.html?file=' + fileUrl + "?source%3Dview"
       } else {

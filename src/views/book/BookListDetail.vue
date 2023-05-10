@@ -328,7 +328,6 @@ export default {
 }
 
 .readlist-info .author {
-  width: 90px;
   margin-right: 36px;
 }
 
