@@ -99,11 +99,11 @@
                   <!-- <p itemprop="alternativeHeadline" class="subtitle" v-html="item.desc"></p> -->
                   <div class="article-meta">
                     <meta itemprop="bookFormat" content="http://schema.org/EBook">
-                    <link itemprop="author" href="#author">
+                    <link itemprop="author">
                       <p class="author">
                         <span class="label"></span>
                         <span class="labeled-text">
-                          <a v-for="au in item.authorList" :key="au" class="author-item" :href="'/list/search/book?q=' + au"> {{au}}  </a>
+                          <a v-for="au in item.authorList" :key="au" class="author-item"> {{au}}  </a>
                         </span>
                       </p>
                       <p class="category">
@@ -235,12 +235,13 @@ export default {
       })
     },
     goDetail (id) {
-      this.$router.push({
+      let routeUrl = this.$router.resolve({
         path: '/book/' + id,
         query: {
           t: +new Date()
         }
       })
+      window.open(routeUrl.href, '_blank')
     },
     getRecommendList (id) {
       this.$http.get('/zlib/recommend').then(res => {

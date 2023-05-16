@@ -8,9 +8,12 @@ const bookApi = {
   SendSms: '/account/sms',
   SendSmsErr: '/account/sms_err',
 
+  BookDetail: '/zlib/',
+  DelBook: '/zlib/del/',
   BookList: '/zlib/bookList',
   BookListDetail: '/zlib/bookList/',
   BookListItems: '/zlib/bookList/items'
+  
 }
 
 export function getBookList (parameter) {
@@ -18,6 +21,13 @@ export function getBookList (parameter) {
     url: bookApi.BookList,
     method: 'get',
     params: parameter
+  })
+}
+
+export function getBookDetail (id) {
+  return request({
+    url: bookApi.BookDetail + id,
+    method: 'get'
   })
 }
 
@@ -33,5 +43,12 @@ export function getBookListItems (parameter) {
     url: bookApi.BookListItems,
     method: 'get',
     params: parameter
+  })
+}
+
+export function delBook(bookId) {
+  return request({
+    url: bookApi.DelBook + bookId,
+    method: 'post'
   })
 }

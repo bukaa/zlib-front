@@ -69,6 +69,15 @@
         <a-button v-if="readState == 1"><a-icon type="clock-circle"/>阅读中</a-button>
         <a-button v-if="readState == 2"><a-icon type="check-circle"/>已读完</a-button>
         <a-button style="margin-left: 5px;" v-if="readState == 0 || readState == 1 || readState == 2" @click="delRead()"><a-icon type="close-circle"/>删除</a-button>
+        <a-popconfirm
+          title="确定删除当前书籍吗?"
+          ok-text="Yes"
+          cancel-text="No"
+          @confirm="delBook"
+          @cancel="cancel"
+        >
+        <a-button style="margin-left: 5px;"><a-icon type="delete"/>删除</a-button>
+        </a-popconfirm>
       </a-button-group>
     </template>
 
@@ -139,6 +148,7 @@
 <script>
 import { baseMixin } from '@/store/app-mixin'
 import { getReadState, addRead, doRead, delRead } from '@/api/read'
+import { getBookDetail, delBook } from '@/api/book'
 import IconText from '../../components/IconText'
 import IconSelector from '../../components/IconSelector'
 import VueMasonryWall from "vue-masonry-wall"
@@ -199,7 +209,7 @@ export default {
       this.tabActiveKey = key
     },
     fetchDetail(id) {
-      this.$http.get('/zlib/' + id).then(res => {
+      getBookDetail(id).then(res => {
         console.log('res', res)
         var d = res.data
         if(!d || d.deleted) {
@@ -253,6 +263,22 @@ export default {
         this.readState = -1
       })
     },
+    delBook() {
+      delBook(this.id).then(res => {
+        this.$notification['success']({
+          message: '提示',
+          description: '操作成功...',
+          duration: 8
+        })
+      }).catch(err => {
+        this.$notification['error']({
+          message: '提示',
+          description: '图书删除失败，请联系管理员',
+          duration: 8
+        })
+      })
+    },
+    cancel() {},
     getRecommendList (id) {
       this.$http.get('/zlib/recommend/' + id).then(res => {
         console.log('res', res)
