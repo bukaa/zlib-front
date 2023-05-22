@@ -92,6 +92,12 @@ export const asyncRouterMap = [
             name: 'BookDetail',
             component: () => import('@/views/book/Detail'),
             meta: { title: 'menu.book.detail', keepAlive: false, hidden: true }
+          },
+          {
+            path: '/book/:id1',
+            name: 'BookDetail',
+            component: () => import('@/views/book/Detail'),
+            meta: { title: 'menu.book.detail', keepAlive: false, hidden: true }
           }
         ]
       },

@@ -198,7 +198,14 @@ export default {
     }
   },
   created() {
-    const id = (this.$route.params && this.$route.params.id1) + '/' + (this.$route.params && this.$route.params.id2);
+    var id1 = this.$route.params.id1
+    var id2 = this.$route.params.id2
+    var id = ''
+    if(id1 && id2) {
+      id = id1 + '/' + id2
+    } else {
+      id = id1.replace('_', '/')
+    }
     this.fetchDetail(id)
     this.getReadState(id)
     this.id = id
