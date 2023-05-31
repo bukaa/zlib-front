@@ -213,13 +213,12 @@ export default {
       this.loading = true
       getBookList(this.query).then(res => {
         var data = res.data
-        data.forEach(d => {
-        })
         if (data.length < 10) {
           this.loadMoreBtn = false
         } else {
           this.loadMoreBtn = true
         }
+        
         this.data = this.query.pn == 1 ? data : this.data.concat(data)
         this.loading = false
         this.loadingMore = false
@@ -231,13 +230,6 @@ export default {
         query: {
           t: +new Date()
         }
-      })
-    },
-    getRecommendList(id) {
-      this.$http.get('/zlib/recommend').then(res => {
-        console.log('res', res)
-        var data = res.data || []
-        this.recommendList = data
       })
     },
     getRecommendData() {
