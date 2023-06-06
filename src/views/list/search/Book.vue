@@ -317,6 +317,9 @@ export default {
     border-radius: 4px;
     opacity: 1;
     transition: opacity .5s ease-in;
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.5), 0 0 0 6px rgba(170, 170, 170, 0.5);
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(200, 200, 200, 0.3); 
   }
   img {
     max-width: 100%;
@@ -417,6 +420,9 @@ export default {
     height: 100%;
     line-height: 0;
     display: block;
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.5), 0 0 0 6px rgba(170, 170, 170, 0.5);
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(200, 200, 200, 0.3); 
   }
   /deep/ .ant-pro-page-header-wrap-children-content {
     margin: 24px 0px 0;

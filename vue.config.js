@@ -1,8 +1,8 @@
 const path = require('path')
 const webpack = require('webpack')
+const CompressionPlugin = require('compression-webpack-plugin')
+const zlib = require('zlib')
 const packageJson = require('./package.json')
-const GitRevisionPlugin = require('git-revision-webpack-plugin')
-const GitRevision = new GitRevisionPlugin()
 const buildDate = JSON.stringify(new Date().toLocaleString())
 const createThemeColorReplacerPlugin = require('./config/plugin.config')
 
@@ -10,13 +10,6 @@ function resolve (dir) {
   return path.join(__dirname, dir)
 }
 
-// check Git
-function getGitHash () {
-  try {
-    return GitRevision.version()
-  } catch (e) {}
-  return 'unknown'
-}
 // eslint-disable-next-line no-unused-vars
 const isProd = process.env.NODE_ENV === 'production'
 // eslint-disable-next-line no-unused-vars
@@ -48,12 +41,54 @@ const vueConfig = {
         contextRegExp: /^\.\/locale$/,
         resourceRegExp: /moment$/
       }),
+      // 下面两项配置才是 compression-webpack-plugin 压缩配置
+      // 压缩成 .gz 文件
+      new CompressionPlugin({
+        filename: '[path][base].gz',
+        algorithm: 'gzip',
+        test: /\.js$|\.css$|\.html$/,
+        threshold: 10240,
+        minRatio: 0.8
+      }),
+      // 压缩成 .br 文件，如果 zlib 报错无法解决，可以注释这段使用代码，一般本地没问题，需要注意线上服务器会可能发生找不到 zlib 的情况。
+      new CompressionPlugin({
+        filename: '[path][base].br',
+        algorithm: 'brotliCompress',
+        test: /\.(js|css|html|svg)$/,
+        compressionOptions: {
+          params: {
+            [zlib.constants.BROTLI_PARAM_QUALITY]: 11
+          }
+        },
+        threshold: 10240,
+        minRatio: 0.8
+      }),
       new webpack.DefinePlugin({
         APP_VERSION: `"${packageJson.version}"`,
-        GIT_HASH: JSON.stringify(getGitHash()),
         BUILD_DATE: buildDate
       })
-    ]
+    ],
+    // 开启分离 js
+    optimization: {
+      runtimeChunk: 'single',
+      splitChunks: {
+        chunks: 'all',
+        maxInitialRequests: Infinity,
+        minSize: 20000,
+        cacheGroups: {
+          vendor: {
+            test: /[\\/]node_modules[\\/]/,
+            name (module) {
+              // get the name. E.g. node_modules/packageName/not/this/part.js
+              // or node_modules/packageName
+              const packageName = module.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/)[1]
+              // npm package names are URL-safe, but some servers don't like @ symbols
+              return `npm.${packageName.replace('@', '')}`
+            }
+          }
+        }
+      }
+    }
     // en_US: `if prod, add externals`
     // zh_CN: `这里是用来控制编译忽略外部依赖的，与 config.plugin('html') 配合可以编译时引入外部CDN文件依赖`
     // externals: isProd ? assetsCDN.externals : {}
@@ -127,7 +162,7 @@ const vueConfig = {
     // If you want to turn on the proxy, please remove the mockjs /src/main.js
     proxy: {
       '/book': {
-        target: 'http://localhost:6789/',
+        target: 'http://47.92.174.45:6789/',
         ws: false,
         changeOrigin: true
       }
