@@ -2246,7 +2246,6 @@ packages:
     resolution: {integrity: sha512-8cP0CzcxUiFuA9xGJkfeVpqmWTk9nx6CWwamRGCj95ph1SmlRRk9KlCZ6avhCbZd4L68LvYT6l1kpdEnQXrF8w==}
     dependencies:
       '@types/node': 8.9.5
-      tapable: 2.2.1
       webpack: 5.74.0
     transitivePeerDependencies:
       - '@swc/core'
@@ -5234,7 +5233,6 @@ packages:
     engines: {node: '>=10.13.0'}
     dependencies:
       graceful-fs: 4.2.10
-      tapable: 2.2.1
     dev: true
 
   /enquire.js/2.1.6:
@@ -6386,7 +6384,6 @@ packages:
       html-minifier-terser: 6.1.0
       lodash: 4.17.21
       pretty-error: 4.0.0
-      tapable: 2.2.1
       webpack: 5.74.0
     dev: true
 
@@ -10318,11 +10315,6 @@ packages:
       strip-ansi: 6.0.1
     dev: true
 
-  /tapable/2.2.1:
-    resolution: {integrity: sha512-GNzQvQTOIP6RyTfE2Qxb8ZVlNmw0n88vp1szwWRimP02mnTsx3Wtn5qRdqY9w2XduFNUgvOwhNnQsjwCp+kqaQ==}
-    engines: {node: '>=6'}
-    dev: true
-
   /tape/4.16.0:
     resolution: {integrity: sha512-mBlqYFr2mHysgCFXAuSarIQ+ffhielpb7a5/IbeOhMaLnQYhkJLUm6CwO1RszWeHRxnIpMessZ3xL2Cfo94BWw==}
     hasBin: true
@@ -11265,7 +11257,6 @@ packages:
       mime-types: 2.1.35
       neo-async: 2.6.2
       schema-utils: 3.1.1
-      tapable: 2.2.1
       terser-webpack-plugin: 5.3.5_webpack@5.74.0
       watchpack: 2.4.0
       webpack-sources: 3.2.3
