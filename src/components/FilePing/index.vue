@@ -24,13 +24,22 @@
     },
     methods: {
       checkStatus() {
-        fetch('http://file.361cn.com')
-          .then(() => {
-            this.status = 'success'
-          })
-          .catch(() => {
-            this.status = 'fail'
-          })
+        let retryCount = 3  // 默认重试3次
+        const check = () => {
+          fetch('http://file.361cn.com')
+            .then(() => {
+              this.status = 'success'
+            })
+            .catch(() => {
+              if (retryCount > 0) {  // 还有重试次数
+                retryCount--     
+                setTimeout(check, 100)  // 100毫秒后重试
+              } else {
+                this.status = 'fail'
+              }
+            })
+        }
+        check()  
       }
     }
   }
