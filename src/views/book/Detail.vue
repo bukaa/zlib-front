@@ -103,6 +103,7 @@
         </a-button>
         <a-button v-if="item.fileState == 1 && item.fileDesc && item.fileDesc.indexOf('PDF') != -1" type="primary" ghost size="large" style="margin-left: 50px;" @click="showDrawer(item.id)">
           <icon-text type="read" text=""/> 直接查看
+          <file-ping style="margin-left: 5px;"/>
         </a-button>
         <!-- <a-button v-if="item.fileState == 1 && item.fileDesc && (item.fileDesc.indexOf('MOBI') != -1 || item.fileDesc.indexOf('AZW') != -1 || item.fileDesc.indexOf('AZW3') != -1)" type="primary" ghost size="large" style="margin-left: 50px;" @click="showDrawer(item.id)">
           <icon-text type="read" text=""/> 转换后查看
@@ -110,7 +111,7 @@
     </a-card>
 
     <a-drawer :width="deviceType === 'Pad' || deviceType === 'Mobile' ? '100%': '70%'" placement="right" :closable="true" :visible="showFileVisible" height="100%" @close="showFileVisible = false">
-      <h3>{{ item.name }}</h3>
+      <h3 style="text-align: center;">{{ item.name }}</h3>
       <iframe id='previewPdf' v-if="item.fileDesc && 
         (item.fileDesc.indexOf('EPUB') != -1 
           || item.fileDesc.indexOf('PDF') != -1 
@@ -152,6 +153,7 @@ import { getBookDetail, delBook } from '@/api/book'
 import IconText from '../../components/IconText'
 import IconSelector from '../../components/IconSelector'
 import VueMasonryWall from "vue-masonry-wall"
+import { FilePing } from '@/components'
 
 export default {
   name: 'Advanced',
@@ -159,7 +161,8 @@ export default {
   components: {
     IconText,
     IconSelector,
-    VueMasonryWall
+    VueMasonryWall,
+    FilePing
   },
   data () {
     return {
@@ -318,11 +321,7 @@ export default {
       // var fileUrl = '/zlib/download/' + this.item.id + '.' + this.item.fileExt
       var fileName = this.item.id.replace('/', '_') + '.' + this.item.fileExt
       let path = process.env.VUE_APP_PUBLIC_PATH.endsWith('/') ? process.env.VUE_APP_PUBLIC_PATH: process.env.VUE_APP_PUBLIC_PATH + '/'
-      if(this.item.punishFlag == 2) {
-        this.showSensitiveFile(fileName, path)
-        return
-      }
-      var fileUrl = 'http://ali.361cn.com/d/book/' + this.item.id.substring(0, 2) + '/' + this.item.id.substring(2, 4) + '/' + fileName
+      var fileUrl = 'http://file.361cn.com/book/' + this.item.id.substring(0, 2) + '/' + this.item.id.substring(2, 4) + '/' + fileName
       this.showFileVisible = true
       if(this.item.fileDesc.indexOf('PDF') != -1) {
         this.fileViewUrl = '/lib/pdfViewer/web/viewer.html?file=' + fileUrl + "?source%3Dview"
@@ -502,7 +501,11 @@ export default {
     max-width: 100%;
   }
   /deep/ .ant-drawer-body {
-    height: 98% !important;
+    height: 100% !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    padding-bottom: 0 !important;
+    padding-top: 10px !important
   }
 
   .mobile {
