@@ -30,7 +30,8 @@
             .then(() => {
               this.status = 'success'
             })
-            .catch(() => {
+            .catch((e) => {
+              alert(JSON.stringify(e))
               if (retryCount > 0) {  // 还有重试次数
                 retryCount--     
                 setTimeout(check, 100)  // 100毫秒后重试
