@@ -309,12 +309,7 @@ export default {
     },
     downloadFile(id) {
       var fileName = this.item.id.replace('/', '_') + '.' + this.item.fileExt
-      var fileUrl
-      if(this.item.punishFlag != 2) {
-        fileUrl = 'http://ali.361cn.com/d/book/' + this.item.id.substring(0, 2) + '/' + this.item.id.substring(2, 4) + '/' + fileName
-      } else {
-        fileUrl = 'http://ali.361cn.com/d/book123/' + this.item.id.substring(0, 2) + '/' + this.item.id.substring(2, 4) + '/' + fileName
-      }
+      var fileUrl = window.fileHost + 'book/' + this.item.id.substring(0, 2) + '/' + this.item.id.substring(2, 4) + '/' + fileName
       console.log('fileUrl ==>' + fileUrl)
       window.open(fileUrl, '_blank')
     },
@@ -322,7 +317,7 @@ export default {
       // var fileUrl = '/zlib/download/' + this.item.id + '.' + this.item.fileExt
       var fileName = this.item.id.replace('/', '_') + '.' + this.item.fileExt
       let path = process.env.VUE_APP_PUBLIC_PATH.endsWith('/') ? process.env.VUE_APP_PUBLIC_PATH: process.env.VUE_APP_PUBLIC_PATH + '/'
-      var fileUrl = 'http://file.361cn.com/book/' + this.item.id.substring(0, 2) + '/' + this.item.id.substring(2, 4) + '/' + fileName
+      var fileUrl = window.fileHost + 'book/' + this.item.id.substring(0, 2) + '/' + this.item.id.substring(2, 4) + '/' + fileName
       this.showFileVisible = true
       if(this.item.fileDesc.indexOf('PDF') != -1) {
         this.fileViewUrl = '/lib/pdfViewer/web/viewer.html?file=' + fileUrl + "?source%3Dview"
@@ -330,28 +325,6 @@ export default {
         this.fileViewUrl = path + 'lib/ePubViewer/index.html?' + fileUrl + "?source=view"
       }
       this.doRead()
-    },
-    showSensitiveFile(fileName, path) {
-      this.$http.get('http://ali.361cn.com/d/book123/' + this.item.id.substring(0, 2) + '/' + this.item.id.substring(2, 4) + '/' + fileName).then(res => {
-        console.log('res', res)
-        var data = res.data
-        if(!data.redirect_url) {
-          this.$notification['error']({
-            message: '提示',
-            description: '文件获取失败，请联系管理员',
-            duration: 8
-          })
-        }
-        var fileUrl = data.redirect_url.replace('auto_redirect=0', 'auto_redirect=1')
-        fileUrl = encodeURIComponent(fileUrl)
-        this.showFileVisible = true
-        if(this.item.fileDesc.indexOf('PDF') != -1) {
-          this.fileViewUrl = '/lib/pdfViewer/web/viewer.html?file=' + fileUrl + "&source%3Dview"
-        } else {
-          this.fileViewUrl = path + 'lib/ePubViewer/index.html?' + fileUrl + "&source=view"
-        }
-        this.doRead()
-      })
     },
     getText(str) {
       if(!str) {

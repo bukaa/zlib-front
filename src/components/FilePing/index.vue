@@ -23,24 +23,44 @@
       this.checkStatus()
     },
     methods: {
+      // checkStatus() {
+      //   let retryCount = 3  // 默认重试3次
+      //   const check = () => {
+      //     fetch('http://file.361cn.com')
+      //       .then(() => {
+      //         this.status = 'success'
+      //       })
+      //       .catch((e) => {
+      //         alert(JSON.stringify(e))
+      //         if (retryCount > 0) {  // 还有重试次数
+      //           retryCount--     
+      //           setTimeout(check, 100)  // 100毫秒后重试
+      //         } else {
+      //           this.status = 'fail'
+      //         }
+      //       })
+      //   }
+      //   check()  
+      // }
       checkStatus() {
-        let retryCount = 3  // 默认重试3次
-        const check = () => {
-          fetch('http://file.361cn.com')
-            .then(() => {
+        let retries = 3
+        window.fileHost = 'http://10.242.108.0:6677/'
+        const ping = () => {
+          fetch(window.fileHost, { timeout: 3000 })
+            .then(res => {
               this.status = 'success'
             })
-            .catch((e) => {
-              alert(JSON.stringify(e))
-              if (retryCount > 0) {  // 还有重试次数
-                retryCount--     
-                setTimeout(check, 100)  // 100毫秒后重试
+            .catch(err => {
+              retries--
+              if (retries > 0) {
+                setTimeout(ping, 50)
               } else {
-                this.status = 'fail'
+                window.fileHost = 'http://cdn.361cn.com/'
+                ping()
               }
             })
         }
-        check()  
+        ping()
       }
     }
   }
