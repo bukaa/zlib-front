@@ -12,6 +12,8 @@
   </template>
   
   <script>
+  import axios from 'axios';
+
   export default {
     name: 'FilePing',
     data() {
@@ -43,10 +45,14 @@
       //   check()  
       // }
       checkStatus() {
-        let retries = 3
+        const api = axios.create({
+          timeout: 2000
+        })
+        let retries = 2
         window.fileHost = 'http://10.242.108.0:6677/'
+        // window.fileHost = 'http://cdn.361cn.com/'
         const ping = () => {
-          fetch(window.fileHost, { timeout: 3000 })
+          api.get(window.fileHost)
             .then(res => {
               this.status = 'success'
             })
