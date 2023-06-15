@@ -49,19 +49,22 @@
           timeout: 2000
         })
         let retries = 2
-        window.fileHost = 'http://10.242.108.0:6677/'
-        // window.fileHost = 'http://cdn.361cn.com/'
+        // window.fileHost = 'http://10.242.108.0:6677/'
+        // 默认值
+        window.fileHost = 'http://cdn.361cn.com/'
+        // 试试ip
+        var tempFileHost = 'http://10.242.108.0:6677/'
         const ping = () => {
-          api.get(window.fileHost)
+          api.get(tempFileHost)
             .then(res => {
               this.status = 'success'
+              window.fileHost = tempFileHost
             })
             .catch(err => {
               retries--
               if (retries > 0) {
                 setTimeout(ping, 50)
               } else {
-                window.fileHost = 'http://cdn.361cn.com/'
                 ping()
               }
             })
