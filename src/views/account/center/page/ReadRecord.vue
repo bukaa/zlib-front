@@ -34,7 +34,7 @@
             <span>{{ item.properties['出版社'] }}</span>
           </div>
           <div class="extra">
-            <em>{{ item.updateTime | moment }}</em>
+            <em>{{ item.addTime | moment }}</em>
           </div>
         </div>
       </div>
