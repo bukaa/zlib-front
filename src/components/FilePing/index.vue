@@ -55,7 +55,7 @@
         // 试试ip
         var tempFileHost = 'http://10.242.108.0:6677/'
         const ping = () => {
-          api.get(tempFileHost, {withCredentials: true})
+          api.get(tempFileHost)
             .then(res => {
               this.status = 'success'
               window.fileHost = tempFileHost
@@ -65,7 +65,7 @@
               if (retries > 0) {
                 setTimeout(ping, 50)
               } else {
-                ping()
+                // ping()
               }
             })
         }
