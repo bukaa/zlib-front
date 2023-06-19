@@ -46,7 +46,7 @@
       // }
       checkStatus() {
         const api = axios.create({
-          timeout: 2000
+          timeout: 1500
         })
         let retries = 2
         // window.fileHost = 'http://10.242.108.0:6677/'
@@ -55,8 +55,9 @@
         // 试试ip
         var tempFileHost = 'http://10.242.108.0:6677/'
         const ping = () => {
-          api.get(tempFileHost)
+          api.get(tempFileHost + 'book/hello')
             .then(res => {
+              console.log('book_host=>' + tempFileHost, res.data)
               this.status = 'success'
               window.fileHost = tempFileHost
             })
@@ -65,7 +66,11 @@
               if (retries > 0) {
                 setTimeout(ping, 50)
               } else {
-                // ping()
+                api.get(window.fileHost + 'book/hello')
+                  .then(res => {
+                    console.log('book_host=>' + window.fileHost, res.data)
+                    this.status = 'success'
+                })
               }
             })
         }
