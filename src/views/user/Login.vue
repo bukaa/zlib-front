@@ -71,11 +71,11 @@
 
       <a-form-item>
         <a-checkbox v-decorator="['rememberMe', { valuePropName: 'checked' }]">{{ $t('user.login.remember-me') }}</a-checkbox>
-        <router-link
-          :to="{ name: 'recover', params: { user: 'aaa'} }"
+        <a-text
           class="forge-password"
-          style="float: right;"
-        >{{ $t('user.login.forgot-password') }}</router-link>
+          style="float: right; cursor: pointer; text-decoration: underline;"
+          @click="forgetPass"
+        >{{ $t('user.login.forgot-password') }}</a-text>
       </a-form-item>
 
       <a-form-item style="margin-top:24px">
@@ -89,7 +89,7 @@
         >{{ $t('user.login.login') }}</a-button>
       </a-form-item>
 
-      <div class="user-login-other">
+      <!-- <div class="user-login-other">
         <span>{{ $t('user.login.sign-in-with') }}</span>
         <a>
           <a-icon class="item-icon" type="alipay-circle"></a-icon>
@@ -101,7 +101,7 @@
           <a-icon class="item-icon" type="weibo-circle"></a-icon>
         </a>
         <router-link class="register" :to="{ name: 'register' }">{{ $t('user.login.signup') }}</router-link>
-      </div>
+      </div> -->
     </a-form>
 
     <two-step-captcha
@@ -201,6 +201,14 @@ export default {
             state.loginBtn = false
           }, 600)
         }
+      })
+    },
+    forgetPass() {
+      debugger
+      this.$notification['error']({
+        message: '提示',
+        description: '请联系管理员~',
+        duration: 4
       })
     },
     getCaptcha (e) {
