@@ -58,6 +58,7 @@
       v-if="showRecommend"
       style="margin-top: 24px;"
       :bordered="false"
+      :loading="loading"
       class="project-list"
       :tabList="operationTabList"
       :activeTabKey="operationActiveTabKey"
@@ -196,6 +197,7 @@ export default {
     onSearch() {
       this.query.pn = 1
       this.showRecommend = false
+      this.loading = true
       this.getList()
     },
     getList () {
@@ -248,6 +250,7 @@ export default {
         console.log('res', res)
         var data = res.data || []
         this.recommendList = data
+        this.loading = false
       })
     },
     getRecommendData() {
