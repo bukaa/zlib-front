@@ -55,7 +55,7 @@
         // 试试ip
         var tempFileHost = 'http://10.242.108.0:6677/'
         const ping = () => {
-          api.get(tempFileHost + 'book/hello')
+          api.get(tempFileHost + 'book/hello?t=' + (new Date().getTime()))
             .then(res => {
               console.log('book_host=>' + tempFileHost, res.data)
               this.status = 'success'
@@ -66,7 +66,7 @@
               if (retries > 0) {
                 setTimeout(ping, 50)
               } else {
-                api.get(window.fileHost + 'book/hello')
+                api.get(window.fileHost + 'book/hello?t=' + (new Date().getTime()))
                   .then(res => {
                     console.log('book_host=>' + window.fileHost, res.data)
                     this.status = 'success'
