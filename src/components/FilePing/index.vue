@@ -46,7 +46,7 @@
       // }
       checkStatus() {
         const api = axios.create({
-          timeout: 1000
+          timeout: 1200
         })
         let retries = 2
         // window.fileHost = 'http://10.242.108.0:6677/'
