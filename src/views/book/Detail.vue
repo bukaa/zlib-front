@@ -95,20 +95,19 @@
     </template> -->
 
     <a-card v-if="item.fileState == 1" style="margin-top: 24px" :bordered="false" title="">
-        <a-button type="primary" ghost size="large" @click="downloadFile(item.id)">
-          <icon-text type="download" text=""/> 下载({{item.fileDesc}})
-        </a-button>
-        <a-button v-if="item.fileDesc && item.fileDesc.indexOf('EPUB') != -1" type="primary" ghost size="large" style="margin-left: 15px;" @click="showDrawer(item.id)">
-          <icon-text type="read" text=""/> 阅读
-          <file-ping style="margin-left: 5px;"/>
-        </a-button>
-        <a-button v-if="item.fileState == 1 && item.fileDesc && item.fileDesc.indexOf('PDF') != -1" type="primary" ghost size="large" style="margin-left: 15px;" @click="showDrawer(item.id)">
-          <icon-text type="read" text=""/> 查看
-          <file-ping style="margin-left: 5px;"/>
-        </a-button>
-        <!-- <a-button v-if="item.fileState == 1 && item.fileDesc && (item.fileDesc.indexOf('MOBI') != -1 || item.fileDesc.indexOf('AZW') != -1 || item.fileDesc.indexOf('AZW3') != -1)" type="primary" ghost size="large" style="margin-left: 50px;" @click="showDrawer(item.id)">
-          <icon-text type="read" text=""/> 转换后查看
-        </a-button> -->
+      <file-ping style="margin-left: 5px;"/>
+      <a-button type="primary" ghost size="large" @click="downloadFile(item.id)">
+        <icon-text type="download" text=""/> 下载({{item.fileDesc}})
+      </a-button>
+      <a-button v-if="item.fileDesc && item.fileDesc.indexOf('EPUB') != -1" type="primary" ghost size="large" style="margin-left: 15px;" @click="showDrawer(item.id)">
+        <icon-text type="read" text=""/> 阅读
+      </a-button>
+      <a-button v-if="item.fileState == 1 && item.fileDesc && item.fileDesc.indexOf('PDF') != -1" type="primary" ghost size="large" style="margin-left: 15px;" @click="showDrawer(item.id)">
+        <icon-text type="read" text=""/> 查看
+      </a-button>
+      <!-- <a-button v-if="item.fileState == 1 && item.fileDesc && (item.fileDesc.indexOf('MOBI') != -1 || item.fileDesc.indexOf('AZW') != -1 || item.fileDesc.indexOf('AZW3') != -1)" type="primary" ghost size="large" style="margin-left: 50px;" @click="showDrawer(item.id)">
+        <icon-text type="read" text=""/> 转换后查看
+      </a-button> -->
     </a-card>
 
     <a-drawer :width="deviceType === 'Pad' || deviceType === 'Mobile' ? '100%': '70%'" placement="right" :closable="true" :visible="showFileVisible" height="100%" @close="showFileVisible = false">
