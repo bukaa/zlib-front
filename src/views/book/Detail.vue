@@ -99,11 +99,11 @@
         <icon-text type="download" text=""/> 下载({{item.fileDesc}})
         <file-ping style="margin-left: 5px;"/>
       </a-button>
-      <a-button v-if="item.fileDesc && item.fileDesc.indexOf('EPUB') != -1" type="primary" ghost size="large" style="margin-left: 15px;" @click="showDrawer(item.id)">
+      <a-button v-if="item.fileDesc && item.fileDesc.indexOf('EPUB') != -1" type="primary" ghost size="large" style="margin-left: 12px;" @click="showDrawer(item.id)">
         <icon-text type="read" text=""/> 阅读
         <file-ping style="margin-left: 5px;"/>
       </a-button>
-      <a-button v-if="item.fileState == 1 && item.fileDesc && item.fileDesc.indexOf('PDF') != -1" type="primary" ghost size="large" style="margin-left: 15px;" @click="showDrawer(item.id)">
+      <a-button v-if="item.fileState == 1 && item.fileDesc && item.fileDesc.indexOf('PDF') != -1" type="primary" ghost size="large" style="margin-left: 12px;" @click="showDrawer(item.id)">
         <icon-text type="read" text=""/> 查看
         <file-ping style="margin-left: 5px;"/>
       </a-button>
