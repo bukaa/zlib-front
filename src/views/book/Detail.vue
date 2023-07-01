@@ -18,7 +18,7 @@
                 <p class="author">
                   <span class="label">作者</span>
                   <span class="labeled-text">
-                    <a v-for="au in item.authorList" :key="au" class="author-item" :href="'/list/search/book?q=' + au"> {{au}}  </a>
+                    <a v-for="au in item.authorList" :key="au" class="author-item" :href="'/#/list/search-list?q=' + au"> {{au}}</a>
                   </span>
                 </p>
                 <ul class="ant-list-item-action" style="overflow: hidden; zoom: 1; margin-top: 15px;">
@@ -107,8 +107,8 @@
         <icon-text type="read" text=""/> 查看
         <file-ping style="margin-left: 5px;"/>
       </a-button>
-      <!-- <a-button v-if="item.fileState == 1 && item.fileDesc && (item.fileDesc.indexOf('MOBI') != -1 || item.fileDesc.indexOf('AZW') != -1 || item.fileDesc.indexOf('AZW3') != -1)" type="primary" ghost size="default" style="margin-left: 50px;" @click="showDrawer(item.id)">
-        <icon-text type="read" text=""/> 转换后查看
+      <!-- <a-button v-if="item.fileState == 1 && item.fileDesc && (item.fileDesc.indexOf('MOBI') != -1 || item.fileDesc.indexOf('AZW') != -1 || item.fileDesc.indexOf('AZW3') != -1)" type="primary" ghost size="default" style="margin-left: 50px;" @click="convert(item.id)">
+        <icon-text type="read" text=""/> 转换后阅读
       </a-button> -->
     </a-card>
 
@@ -152,7 +152,7 @@
 <script>
 import { baseMixin } from '@/store/app-mixin'
 import { getReadState, addRead, doRead, delRead } from '@/api/read'
-import { getBookDetail, delBook } from '@/api/book'
+import { getBookDetail, delBook, convert } from '@/api/book'
 import IconText from '../../components/IconText'
 import IconSelector from '../../components/IconSelector'
 import VueMasonryWall from "vue-masonry-wall"
@@ -328,6 +328,25 @@ export default {
       }
       this.doRead()
     },
+    convert() {
+      convert(this.item.id).then(res => {
+        if(res.data && res.data > 0) {
+          this.showDrawer()
+        } else {
+          this.$notification['error']({
+            message: '提示',
+            description: '图书转换失败，请联系管理员',
+            duration: 8
+          })
+        }
+      }).catch(err => {
+        this.$notification['error']({
+          message: '提示',
+          description: '图书转换异常，请联系管理员',
+          duration: 8
+        })
+      })
+    },
     getText(str) {
       if(!str) {
         return
@@ -373,6 +392,9 @@ export default {
       width: 180px;
       height: auto;
       float: left;
+  }
+  .article-profile-primary .author-item {
+    margin-left: 8px;
   }
   .cover {
       position: relative;

@@ -29,6 +29,36 @@
                 </a-form-item>
               </a-col>
             </a-row>
+            <a-row style="padding-top: 18px;">
+              <a-col :md="6" v-if="!showMoreSearchFile">
+                <a-form-item>
+                  <span id="advSearch-control" @click="showMoreSearchFile = true" style="border-bottom: 1px dashed; color: #777;font-size: 14px;cursor:pointer;">搜索设置</span>
+                </a-form-item>
+              </a-col>
+              <a-col :md="3" v-if="showMoreSearchFile">
+                <a-form-item :wrapper-col="{ span: 24 }">
+                  <a-checkbox v-model:checked="query.precision">精准搜索</a-checkbox>
+                </a-form-item>
+              </a-col>
+              <a-col :md="6" v-if="showMoreSearchFile">
+                <a-form-item label="格式" name="fileType" :wrapper-col="{ span: 16 }">
+                  <a-select
+                    v-model="query.fileType"
+                    :allowClear="true"
+                    :options="[{value: 'EPUB', label: 'EPUB'}, {value: 'PDF', label: 'PDF'}, {value: 'MOBI', label: 'MOBI'}, {value: 'AZW', label: 'AZW'}, {value: 'AZW3', label: 'AZW3'}]"
+                  ></a-select>
+                </a-form-item>
+              </a-col>
+              <a-col :md="6" v-if="showMoreSearchFile">
+                <a-form-item label="语言" name="language" :wrapper-col="{ span: 16 }">
+                  <a-select
+                    v-model="query.language"
+                    :allowClear="true"
+                    :options="[{value: 'chinese', label: '中文'}, {value: 'english', label: '英语'}, {value: 'japanese', label: '日语'}, {value: 'korean', label: '韩语'}, {value: 'italian', label: '意大利语'}]"
+                  ></a-select>
+                </a-form-item>
+              </a-col>
+            </a-row>
           </standard-form-row>
 
           <!-- <standard-form-row title="" grid last>
@@ -169,6 +199,7 @@ export default {
   data () {
     return {
       query: {pn: 1, keywords: '', year: '', language: ''},
+      showMoreSearchFile: false,
       loading: true,
       loadingMore: false,
       loadMoreBtn: true,
@@ -190,6 +221,12 @@ export default {
   },
   created() {
     this.deviceType = this.getPlatform()
+    this.query.keywords = this.$route.query.q || ''
+    if(this.query.keywords) {
+      this.onSearch()
+    } else {
+      this.showRecommend = true
+    }
   },
   mounted () {
     this.buildYearList()

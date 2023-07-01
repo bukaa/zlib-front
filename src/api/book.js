@@ -12,7 +12,9 @@ const bookApi = {
   DelBook: '/zlib/del/',
   BookList: '/zlib/bookList',
   BookListDetail: '/zlib/bookList/',
-  BookListItems: '/zlib/bookList/items'
+  BookListItems: '/zlib/bookList/items',
+
+  Convert: '/zlib/convert'
   
 }
 
@@ -27,6 +29,14 @@ export function getBookList (parameter) {
 export function getBookDetail (id) {
   return request({
     url: bookApi.BookDetail + id,
+    method: 'get'
+  })
+}
+
+export function convert(id) {
+  return request({
+    url: bookApi.Convert,
+    params: {id: id},
     method: 'get'
   })
 }
