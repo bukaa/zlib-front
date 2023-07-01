@@ -1,5 +1,5 @@
 <template>
-  <div class="page-header-index-wide page-header-wrapper-grid-content-main">
+  <page-header-wrapper>
     <a-row :gutter="24">
       <a-col :md="24" :lg="7">
         <a-card :bordered="false">
@@ -91,7 +91,7 @@
         </a-card>
       </a-col>
     </a-row>
-  </div>
+  </page-header-wrapper>
 </template>
 
 <script>
@@ -190,6 +190,13 @@ export default {
 </script>
 
 <style lang="less" scoped>
+
+/deep/ .ant-pro-page-header-wrap-children-content {
+  margin: 24px 0px 0;
+}
+/deep/ .ant-pro-grid-content.wide {
+  max-width: 100%;
+}
 .page-header-wrapper-grid-content-main {
   width: 100%;
   height: 100%;

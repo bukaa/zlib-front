@@ -1,9 +1,9 @@
 <template>
-  <div>
+  <page-header-wrapper>
     <!-- <div style="width: 100%;text-align: center;">
       <img v-if="showRecommend" src="@/assets/bookdb_logo_2.png" style="width: 250px;height: auto;margin-bottom: 5%;margin-top: 18%;border-radius: 5px;">
     </div> -->
-    <a-card :bordered="false" class="ant-pro-components-tag-select">
+    <a-card :bordered="false" class="ant-pro-components-search">
       <a-form :form="form" layout="inline">
         <!-- <standard-form-row title="类目" block style="padding-bottom: 11px;">
           <a-form-item>
@@ -155,7 +155,7 @@
       </a-list>
     </a-card>
     <a-back-top />
-  </div>
+  </page-header-wrapper>
 </template>
 
 <script>
@@ -262,6 +262,22 @@ export default {
 
 <style lang="less" scoped>
 @import '~ant-design-vue/lib/style/index';
+.ant-pro-components-search {
+  :deep(.ant-pro-tag-select .ant-tag) {
+    margin-right: 24px;
+    padding: 0 8px;
+    font-size: 14px;
+  }
+  :deep(.ant-card-body) {
+    padding-bottom: 0px;
+  }
+}
+/deep/ .ant-pro-page-header-wrap-children-content {
+  margin: 0;
+}
+/deep/ .ant-pro-grid-content.wide {
+  max-width: 100%;
+}
 .project-list {
   .article-profile-primary {
     /* display: flex; */

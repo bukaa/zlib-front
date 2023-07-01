@@ -44,3 +44,21 @@ new Vue({
   created: bootstrap,
   render: h => h(App)
 }).$mount('#app')
+
+
+Vue.prototype.getPlatform = function() {
+  const setDeviceType = () => {
+    var deviceType = ''
+    const width = document.documentElement.clientWidth
+    if (width > 1200) {
+      deviceType = 'PC'
+    } else if (width > 800) {
+      deviceType = 'Pad'
+    } else {
+      deviceType = 'Mobile'
+    }
+    return deviceType
+  }
+  window.addEventListener('resize', setDeviceType)
+  return setDeviceType()
+}

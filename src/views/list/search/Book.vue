@@ -1,57 +1,59 @@
 <template>
-  <div>
+  <page-header-wrapper>
     <!-- <div style="width: 100%;text-align: center;">
       <img v-if="showRecommend" src="@/assets/bookdb_logo_2.png" style="width: 250px;height: auto;margin-bottom: 5%;margin-top: 18%;border-radius: 5px;">
     </div> -->
-    <a-card :bordered="false" class="ant-pro-components-tag-select">
-      <a-form :form="form" layout="inline">
-        <!-- <standard-form-row title="类目" block style="padding-bottom: 11px;">
-          <a-form-item>
-            <tag-select hideCheckAll mode="combobox" v-model="query.category" @change="handleCategoryChange">
-              <tag-select-option v-for="c in categoryList" :key="c" :value="c" style="cursor: pointer;">{{ c }}</tag-select-option>
-            </tag-select>
-          </a-form-item>
-        </standard-form-row> -->
+    <template v-slot:content>
+      <a-card :bordered="false" class="ant-pro-components-search">
+        <a-form :form="form" layout="inline">
+          <!-- <standard-form-row title="类目" block style="padding-bottom: 11px;">
+            <a-form-item>
+              <tag-select hideCheckAll mode="combobox" v-model="query.category" @change="handleCategoryChange">
+                <tag-select-option v-for="c in categoryList" :key="c" :value="c" style="cursor: pointer;">{{ c }}</tag-select-option>
+              </tag-select>
+            </a-form-item>
+          </standard-form-row> -->
 
-        <standard-form-row title="" grid>
-          <a-row>
-            <a-col :md="24">
-              <a-form-item :wrapper-col="{ span: 24 }">
-                <a-input-search
-                  v-model="query.keywords"
-                  placeholder="输入书名，作者，出版社搜索~"
-                  enter-button="Search"
-                  allowClear
-                  size="large"
-                  @search="onSearch"
-                />
-              </a-form-item>
-            </a-col>
-          </a-row>
-        </standard-form-row>
+          <standard-form-row title="" grid>
+            <a-row>
+              <a-col :md="24">
+                <a-form-item :wrapper-col="{ span: 24 }">
+                  <a-input-search
+                    v-model="query.keywords"
+                    placeholder="输入书名，作者，出版社搜索~"
+                    enter-button="Search"
+                    allowClear
+                    size="large"
+                    @search="onSearch"
+                  />
+                </a-form-item>
+              </a-col>
+            </a-row>
+          </standard-form-row>
 
-        <!-- <standard-form-row title="" grid last>
-          <a-row :gutter="16">
-            <a-col :xs="24" :sm="24" :md="12" :lg="10" :xl="8">
-              <a-form-item label="年份：" :wrapper-col="{ xs: 24, sm: 24, md: 12 }">
-                <a-select v-model="query.year" allowClear showSearch placeholder="年份" style="max-width: 200px; width: 100%;">
-                  <a-select-option v-for="y in yearList" :key="y" :value="y">{{y}}</a-select-option>
-                </a-select>
-              </a-form-item>
-            </a-col>
-            <a-col :xs="24" :sm="24" :md="12" :lg="10" :xl="8">
-              <a-form-item label="语言：" :wrapper-col="{ xs: 24, sm: 24, md: 12 }">
-                <a-select v-model="query.language" allowClear showSearch placeholder="语言" style="max-width: 200px; width: 100%;">
-                  <a-select-option value="chinese">中文</a-select-option>
-                  <a-select-option value="english">英文</a-select-option>
-                  <a-select-option value="japanese">日文</a-select-option>
-                </a-select>
-              </a-form-item>
-            </a-col>
-          </a-row>
-        </standard-form-row> -->
-      </a-form>
-    </a-card>
+          <!-- <standard-form-row title="" grid last>
+            <a-row :gutter="16">
+              <a-col :xs="24" :sm="24" :md="12" :lg="10" :xl="8">
+                <a-form-item label="年份：" :wrapper-col="{ xs: 24, sm: 24, md: 12 }">
+                  <a-select v-model="query.year" allowClear showSearch placeholder="年份" style="max-width: 200px; width: 100%;">
+                    <a-select-option v-for="y in yearList" :key="y" :value="y">{{y}}</a-select-option>
+                  </a-select>
+                </a-form-item>
+              </a-col>
+              <a-col :xs="24" :sm="24" :md="12" :lg="10" :xl="8">
+                <a-form-item label="语言：" :wrapper-col="{ xs: 24, sm: 24, md: 12 }">
+                  <a-select v-model="query.language" allowClear showSearch placeholder="语言" style="max-width: 200px; width: 100%;">
+                    <a-select-option value="chinese">中文</a-select-option>
+                    <a-select-option value="english">英文</a-select-option>
+                    <a-select-option value="japanese">日文</a-select-option>
+                  </a-select>
+                </a-form-item>
+              </a-col>
+            </a-row>
+          </standard-form-row> -->
+        </a-form>
+      </a-card>
+    </template>
 
     <!-- 推荐 -->
     <a-card
@@ -65,7 +67,7 @@
       @tabChange="(key) => {this.operationActiveTabKey = key}"
     > 
       <!-- <vue-waterfall-easy ref="waterfall" :imgsArr="recommendList" :height="1200" :imgWidth="150" @scrollReachBottom="getRecommendData"></vue-waterfall-easy> -->
-      <vue-masonry-wall :items="recommendList" :options="{width: 150, padding: 8}" :ssr="{columns: 8}" @append="getRecommendData">
+      <vue-masonry-wall :items="recommendList" :options="(deviceType === 'Pad' || deviceType === 'Mobile') ? {width: 100, padding: 4}: {width: 180, padding: 12}" :ssr="(deviceType === 'Pad' || deviceType === 'Mobile') ? {columns: 15}: {columns: 7}" @append="getRecommendData">
         <template v-slot:default="{item}">
           <div class="cover-item" @click="goDetail(item.id)">
             <img :src="item.cover"/>
@@ -145,7 +147,7 @@
       </a-list>
     </a-card>
     <a-back-top />
-  </div>
+  </page-header-wrapper>
 </template>
 
 <script>
@@ -182,8 +184,12 @@ export default {
           tab: '为您推荐'
         }
       ],
-      operationActiveTabKey: '1'
+      operationActiveTabKey: '1',
+      deviceType: ''
     }
+  },
+  created() {
+    this.deviceType = this.getPlatform()
   },
   mounted () {
     this.buildYearList()
@@ -282,12 +288,21 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.ant-pro-components-tag-select {
+.ant-pro-components-search {
   :deep(.ant-pro-tag-select .ant-tag) {
     margin-right: 24px;
     padding: 0 8px;
     font-size: 14px;
   }
+  :deep(.ant-card-body) {
+    padding-bottom: 0px;
+  }
+}
+/deep/ .ant-pro-page-header-wrap-children-content {
+  margin: 24px 0px 0;
+}
+/deep/ .ant-pro-grid-content.wide {
+  max-width: 100%;
 }
 
 .project-list {
@@ -427,12 +442,7 @@ export default {
     background: rgba(255, 255, 255, 0.2);
     border: 1px solid rgba(200, 200, 200, 0.3); 
   }
-  /deep/ .ant-pro-page-header-wrap-children-content {
-    margin: 24px 0px 0;
-  }
-  /deep/ .ant-pro-grid-content.wide {
-    max-width: 100%;
-  }
+
 }
 
 .list-articles-trigger {

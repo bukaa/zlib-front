@@ -27,7 +27,7 @@
                   <li><icon-text type="message" :text="item.commentsInfo || 0" /></li>
                 </ul>
                 <div style="overflow: hidden; zoom: 1; margin-top: 15px;">
-                  <div class="bookDetailsBox">
+                  <div class="bookDetailsBox" v-if="deviceType !== 'Mobile'">
                     <div v-for="(v, k, index) in item.properties" :key="k" class="bookProperty" :style="index % 2 == 0 ? 'width: 40%': '60%'">
                       <div class="property_label">{{ k }}:</div>
                       <div class="property_value ">
@@ -69,15 +69,15 @@
         <a-button v-if="readState == 1"><a-icon type="clock-circle"/>阅读中</a-button>
         <a-button v-if="readState == 2"><a-icon type="check-circle"/>已读完</a-button>
         <a-button style="margin-left: 5px;" v-if="readState == 0 || readState == 1 || readState == 2" @click="delRead()"><a-icon type="close-circle"/>删除</a-button>
-        <a-popconfirm
+        <!-- <a-popconfirm
           title="确定删除当前书籍吗?"
           ok-text="Yes"
           cancel-text="No"
           @confirm="delBook"
           @cancel="cancel"
         >
-        <a-button style="margin-left: 5px;"><a-icon type="delete"/>删除</a-button>
-        </a-popconfirm>
+        <a-button style="margin-left: 5px;"><a-icon type="delete"/>删除图书</a-button>
+        </a-popconfirm> -->
       </a-button-group>
     </template>
 
@@ -112,7 +112,7 @@
       </a-button> -->
     </a-card>
 
-    <a-drawer :width="deviceType === 'Pad' || deviceType === 'Mobile' ? '100%': '70%'" placement="right" :closable="true" :visible="showFileVisible" height="100%" @close="showFileVisible = false">
+    <a-drawer :width="(deviceType === 'Pad' || deviceType === 'Mobile') ? '100%': '70%'" placement="right" :closable="true" :visible="showFileVisible" height="100%" @close="showFileVisible = false">
       <h3 style="text-align: center;">{{ item.name }}</h3>
       <iframe id='previewPdf' v-if="item.fileDesc && 
         (item.fileDesc.indexOf('EPUB') != -1 
@@ -133,7 +133,8 @@
       @tabChange="(key) => {this.operationActiveTabKey = key}"
     > 
       <!-- <vue-waterfall-easy ref="waterfall" :imgsArr="recommendList" :height="1200" :imgWidth="150" @scrollReachBottom="getRecommendData"></vue-waterfall-easy> -->
-      <vue-masonry-wall :items="recommendList" :options="{width: 180, padding: 12}" :ssr="{columns: 7}" @append="getRecommendData">
+      <!-- <vue-masonry-wall :items="recommendList" :options="{width: 180, padding: 12}" :ssr="{columns: 7}" @append="getRecommendData"> -->
+      <vue-masonry-wall :items="recommendList" :options="(deviceType === 'Pad' || deviceType === 'Mobile') ? {width: 100, padding: 4}: {width: 180, padding: 12}" :ssr="(deviceType === 'Pad' || deviceType === 'Mobile') ? {columns: 15}: {columns: 7}" @append="getRecommendData">
         <template v-slot:default="{item}">
           <div class="cover-item" @click="goDetail(item.url)">
             <img :src="item.cover"/>
@@ -203,6 +204,7 @@ export default {
     }
   },
   created() {
+    this.deviceType = this.getPlatform()
     var id1 = this.$route.params.id1
     var id2 = this.$route.params.id2
     var id = ''
@@ -249,7 +251,6 @@ export default {
         this.item = d
         this.loading = false
         this.getRecommendList(id)
-        this.getPlatform()
       })
     },
     getReadState(id) {
@@ -333,21 +334,6 @@ export default {
       }
       let words = str.replace(/<[^<>]+>/g, "").replace(/&nbsp;/gi, " ");
       return words
-    },
-    getPlatform() {
-      this.deviceType = ''
-      const setDeviceType = () => {
-        const width = document.documentElement.clientWidth
-        if (width > 1200) {
-          this.deviceType = 'PC'
-        } else if (width > 800) {
-          this.deviceType = 'Pad'
-        } else {
-          this.deviceType = 'Mobile'
-        }
-      }
-      window.addEventListener('resize', setDeviceType)
-      setDeviceType()
     }
   }
 }

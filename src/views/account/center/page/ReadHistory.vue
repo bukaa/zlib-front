@@ -6,7 +6,7 @@
     itemLayout="vertical"
     :dataSource="data"
   >
-    <a-list-item :key="item.id" slot="renderItem" slot-scope="item">
+    <a-list-item :key="item.addTime" slot="renderItem" slot-scope="item">
       <template slot="actions">
         <div style="display: inline-block;">
           <icon-text style="margin-right: 15px;" type="star-o" :text="item.interestScore || 0" />
