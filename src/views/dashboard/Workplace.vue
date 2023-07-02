@@ -55,7 +55,7 @@
                           <p class="author">
                             <span class="label"></span>
                             <span class="labeled-text">
-                              <a v-for="au in item.authorList" :key="au" class="author-item" :href="'/search?q=' + item.au"> {{au}}  </a>
+                              <a v-for="au in item.authorList" :key="au" class="author-item" :href="'/#/list/search-list?q=' + au"> {{au}}  </a>
                             </span>
                           </p>
                           <!-- <p class="category">
@@ -70,12 +70,12 @@
                               <span> {{ item.properties && item.properties.出版社 }}</span>&nbsp;/&nbsp;<span>{{ item.properties && item.properties.年 }}</span>
                             </span>
                           </p>
-                          <p class="">
+                          <!-- <p class="">
                             <span class="label"></span>
                             <span class="labeled-text">
                               <span> {{ item.properties && item.properties.语言 }}</span>&nbsp;/&nbsp;<span>{{ item.properties && item.properties.文件 }}</span>
                             </span>
-                          </p>
+                          </p> -->
                         </div>
                       </div>
                   </div>
@@ -84,19 +84,21 @@
             </a-list>
           </a-card>
 
-          <a-card :loading="loading" title="动态" :bordered="false">
+          <a-card :loading="newBookLoading" title="动态" :bordered="false">
+            <a slot="extra" @click="getActivity" style="margin-right: 15px;">刷新</a>
+            <a slot="extra" @click="goSearchBook">全部图书</a>
             <a-list>
               <a-list-item :key="index" v-for="(item, index) in activities">
                 <a-list-item-meta>
-                  <a-avatar slot="avatar" size="small" :src="item.user.avatar" />
+                  <a-avatar slot="avatar" shape="square" size="default" style="width: 40px;height: auto;" :src="item.cover" />
                   <div slot="title">
-                    <span>{{ item.user.nickname }}</span
-                    >&nbsp; 在&nbsp;<a href="#">{{ item.project.name }}</a
-                    >&nbsp; <span>{{ item.project.action }}</span
-                    >&nbsp;
-                    <a href="#">{{ item.project.event }}</a>
+                    <span style="font-weight: bold;font-size: 15px;">{{ item.name }}</span>
+                    &nbsp; <a v-for="au in item.authorList" :key="au" class="author-item" :href="'/#/list/search-list?q=' + au"> {{au}}  </a>
+                    &nbsp; <a href="#" style="color: rgba(0, 0, 0, 0.45);line-height: 22px;">{{ item.categorys }}</a>
+                    <br>
+                    <span>{{ item.properties.File }}</span>
                   </div>
-                  <div slot="description">{{ item.time }}</div>
+                  <div slot="description">{{ item.updateTime | moment }}</div>
                 </a-list-item-meta>
               </a-list-item>
             </a-list>
@@ -145,6 +147,7 @@ import { Radar } from '@/components'
 
 import { getRoleList, getServiceList } from '@/api/manage'
 
+import { findBook } from '@/api/book'
 import { findLastRead, getReadCount } from '@/api/read'
 
 const DataSet = require('@antv/data-set')
@@ -163,6 +166,7 @@ export default {
 
       projects: [],
       loading: true,
+      newBookLoading: false,
       radarLoading: true,
       activities: [],
       teams: [],
@@ -241,9 +245,9 @@ export default {
   mounted () {
     this.findLastRead()
     this.getReadCount()
-    // this.getActivity()
+    this.getActivity()
     // this.getTeams()
-    this.initRadar()
+    // this.initRadar()
   },
   methods: {
     findLastRead() {
@@ -265,14 +269,33 @@ export default {
         }
       })
     },
+    goSearchBook() {
+      this.$router.push({
+        path: '/list/search-list?ty=search',
+        query: {
+          t: +new Date()
+        }
+      })
+    },
     goCenter() {
       this.$router.push({
         path: '/account/center'
       })
     },
     getActivity () {
-      this.$http.get('/workplace/activity').then(res => {
-        this.activities = res.result
+      this.newBookLoading = true
+      findBook({pn: 1}).then(res => {
+        this.newBookLoading = false
+        var data = res.data
+        if(data && data.length > 10) {
+          data = data.slice(0,6)
+        }
+        data.forEach(e => {
+          e.categorys = e.categoryList && e.categoryList.join(', ')
+        })
+        this.activities = data
+      }).catch(err => {
+        this.newBookLoading = false
       })
     },
     getTeams () {

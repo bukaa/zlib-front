@@ -87,15 +87,15 @@
 
     <!-- 推荐 -->
     <a-card
+      title="为你推荐"
       v-if="showRecommend"
       style="margin-top: 24px;"
       :bordered="false"
-      :loading="loading"
+      :loading="recommendLoading"
       class="project-list"
-      :tabList="operationTabList"
-      :activeTabKey="operationActiveTabKey"
-      @tabChange="(key) => {this.operationActiveTabKey = key}"
     > 
+      <a slot="extra" @click="getRecommendList" style="margin-right: 15px;">刷新</a>
+      <a slot="extra" @click="getBookRandom">随便看看</a>
       <!-- <vue-waterfall-easy ref="waterfall" :imgsArr="recommendList" :height="1200" :imgWidth="150" @scrollReachBottom="getRecommendData"></vue-waterfall-easy> -->
       <vue-masonry-wall :items="recommendList" :options="(deviceType === 'Pad' || deviceType === 'Mobile') ? {width: 100, padding: 4}: {width: 180, padding: 12}" :ssr="(deviceType === 'Pad' || deviceType === 'Mobile') ? {columns: 15}: {columns: 7}" @append="getRecommendData">
         <template v-slot:default="{item}">
@@ -184,6 +184,7 @@
 import { TagSelect, StandardFormRow, ArticleListContent } from '@/components'
 import IconText from './components/IconText'
 import VueMasonryWall from "vue-masonry-wall"
+import { findBook, getBookRecommend, getBookRandom } from '@/api/book'
 
 const TagSelectOption = TagSelect.Option
 
@@ -201,6 +202,7 @@ export default {
       query: {pn: 1, keywords: '', year: '', language: ''},
       showMoreSearchFile: false,
       loading: true,
+      recommendLoading: false,
       loadingMore: false,
       loadMoreBtn: true,
       data: [],
@@ -222,7 +224,7 @@ export default {
   created() {
     this.deviceType = this.getPlatform()
     this.query.keywords = this.$route.query.q || ''
-    if(this.query.keywords) {
+    if(this.query.keywords || this.$route.query.ty == 'search') {
       this.onSearch()
     } else {
       this.showRecommend = true
@@ -244,7 +246,7 @@ export default {
       this.getList()
     },
     getList () {
-      this.$http.get('/zlib/find', {params: this.query}).then(res => {
+      findBook(this.query).then(res => {
         console.log('res', res)
         var data = res.data
         data.forEach(d => {
@@ -289,11 +291,20 @@ export default {
       window.open(routeUrl.href, '_blank')
     },
     getRecommendList (id) {
-      this.$http.get('/zlib/recommend').then(res => {
+      this.recommendLoading = true
+      getBookRecommend().then(res => {
         console.log('res', res)
         var data = res.data || []
         this.recommendList = data
-        this.loading = false
+        this.recommendLoading = false
+      })
+    },
+    getBookRandom() {
+      this.recommendLoading = true
+      getBookRandom().then(res => {
+        var data = res.data || []
+        this.recommendList = data
+        this.recommendLoading = false
       })
     },
     getRecommendData() {

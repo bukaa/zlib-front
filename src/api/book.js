@@ -8,6 +8,9 @@ const bookApi = {
   SendSms: '/account/sms',
   SendSmsErr: '/account/sms_err',
 
+  BookFind: '/zlib/find',
+  BookRecommend: 'zlib/recommend',
+  BookRandom: 'zlib/random',
   BookDetail: '/zlib/',
   DelBook: '/zlib/del/',
   BookList: '/zlib/bookList',
@@ -16,6 +19,28 @@ const bookApi = {
 
   Convert: '/zlib/convert'
   
+}
+
+export function findBook (parameter) {
+  return request({
+    url: bookApi.BookFind,
+    method: 'get',
+    params: parameter
+  })
+}
+
+export function getBookRecommend () {
+  return request({
+    url: bookApi.BookRecommend,
+    method: 'get'
+  })
+}
+
+export function getBookRandom () {
+  return request({
+    url: bookApi.BookRandom,
+    method: 'get'
+  })
 }
 
 export function getBookList (parameter) {
