@@ -104,11 +104,15 @@
           <!-- <div class="cover-item" @click="goDetail('/#' + item.book.href)">
             <img :src="item.book.cover" />
           </div> -->
-          <div id="book_10992986" :data-id="item.bookId" data-book_id="5663427" class="item j-spellingBook">
-            <div class="cover-container checkBookDownloaded" data-book_id="5663427" data-isbn="">
-              <div class="z-book-cover covered"><img
+          <div :data-id="item.bookId" class="item j-spellingBook">
+            <div class="cover-container checkBookDownloaded" data-isbn="">
+              <div class="z-book-cover covered">
+                <a :href="'#' + item.book.href" target="_blank">
+                  <img
                   :src="item.book.cover"
-                  class="cover btn-viewbook-open"></div>
+                  class="cover btn-viewbook-open">
+                </a>
+              </div>
             </div>
             <div class="item-info">
               <div class="title">

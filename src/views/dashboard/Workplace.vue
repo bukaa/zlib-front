@@ -43,7 +43,7 @@
               <a-card-grid class="project-card-grid" :key="i" v-for="(item, i) in projects">
                 <a-card :bordered="false" :body-style="{ padding: 0 }" @click="goDetail(item.id)">
                   <div class="article-profile-primary ">
-                    <div class="cover shadow-cover">
+                    <div class="cover shadow-cover" style="cursor: pointer;">
                       <img :src="item.cover" :alt="item.name" itemprop="image" loading="lazy">
                     </div>
                     <div class="article-profile-bd" style="padding-top: 5px;">
@@ -90,9 +90,9 @@
             <a-list>
               <a-list-item :key="index" v-for="(item, index) in activities">
                 <a-list-item-meta>
-                  <a-avatar slot="avatar" shape="square" size="default" style="width: 40px;height: auto;" :src="item.cover" />
+                  <a-avatar slot="avatar" @click="goDetail(item.id)" shape="square" size="default" style="width: 40px;height: auto;cursor: pointer;" :src="item.cover" />
                   <div slot="title">
-                    <span style="font-weight: bold;font-size: 15px;">{{ item.name }}</span>
+                    <span style="font-weight: bold;font-size: 15px;cursor: pointer;" @click="goDetail(item.id)">{{ item.name }}</span>
                     &nbsp; <a v-for="au in item.authorList" :key="au" class="author-item" :href="'/#/list/search-list?q=' + au"> {{au}}  </a>
                     &nbsp; <a href="#" style="color: rgba(0, 0, 0, 0.45);line-height: 22px;">{{ item.categorys }}</a>
                     <br>
@@ -371,6 +371,7 @@ export default {
   .article-title {
     font-weight: bold;
     font-size: 16px;
+    cursor: pointer;
   }
   .desc {
     overflow: hidden;
